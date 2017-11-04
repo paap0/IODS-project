@@ -1,9 +1,7 @@
 
 
-____
 
-
-## Introduction
+## Chapter 1: Introduction
 
 
 #### IODS-course: **EXERCISE 1**
@@ -23,8 +21,7 @@ So let's get started!
 
 ____
 My GitHub repository can be found [here](https://github.com/paap0/IODS-project).
+
+
 ____
-
-
-
 
