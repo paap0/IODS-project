@@ -1,12 +1,14 @@
 
 # First updates
 
+A few lines about the course are written in my course diary [here](https://paap0.github.io/IODS-project/).
 
 I am a self taught R user and really enjoy learning new things within it. 
 R Markdown and GitHub are completely new to me. The latter seemed logical, but with GitHub it was not love at first sight. Some extra (concrete) headache was (is and will potentially be) created by the outdated computational equipment of mine. 
 
 I decided to start with DataCamp. It was fun and encouraging, just like the package Swirl. I have my own mysterious ways of figuring things out, but such approaches provide me with a more structured way of learning or memorizing things. Cool!
 
-Finally I got everything running and could upload my files at my GitHub repository. However, I got a little worried. Perhaps I am not skilled enough for this. But, as is said at Cornell: "Keep Calm and Carry On".
+Finally I got everything running and could upload my files at my GitHub repository. However, I got a little worried. Perhaps I am not skilled enough for this. But, as is said at Cornell: 
 
-My Course Diary can be found  [here](https://paap0.github.io/IODS-project/).
+![](http://i0.kym-cdn.com/entries/icons/original/000/002/747/keepcalm.jpg)
+
