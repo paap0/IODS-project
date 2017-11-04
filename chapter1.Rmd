@@ -16,7 +16,9 @@ This is an *Introduction to Open Data Science* - course: **IODS**.
 "Open data and content can be _freely used_, _modified_, and _shared_ by _anyone_ for _any purpose_." ([opendefinition.org](http://opendefinition.org)). However, to make use of all the open data available and scrutinize it properly we need basic skills, tools and lots of motivation. This course will familiarize participants with R R Studio, R Markdown and GitHub. Simultanously all will learn some statistics, too. Every week there will be a lecture and scheduled excercises. Interactive platforms DataCamp, MOOC and GitHub make learning flexible and the enthusiastic supervisory team keep the spirits up even at times of desperation.
 
 **I**
+
 <div style="width:50px;height=50px">![](https://content.mycutegraphics.com/graphics/hearts/funky-pink-heart.png)</div>
+
 **DATA**. 
 
 So let's get started!
