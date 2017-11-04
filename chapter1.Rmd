@@ -6,10 +6,10 @@
 ____
 
 
-##Introduction
+## Introduction
 
 
-####IODS-course: **EXERCISE 1**
+#### IODS-course: **EXERCISE 1**
 
 This is an *Introduction to Open Data Science* - course: **IODS**.
 
