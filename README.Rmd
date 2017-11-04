@@ -1,10 +1,11 @@
 
-# My learning diary
+# First updates
 
 
-I am a self taught R user and really enjoy learning new things within it. R Markdown and GitHub are completely new to me. R Markdown seemed logicla, but with GitHub it was not love at first sight. Some extra (concrete) headache was (is and will potentially be) created by the outdated computational equipment of mine. 
+I am a self taught R user and really enjoy learning new things within it. 
+R Markdown and GitHub are completely new to me. R Markdown seemed logical, but with GitHub it was not love at first sight. Some extra (concrete) headache was (is and will potentially be) created by the outdated computational equipment of mine. 
 
-I decided to start with DataCamp. It was nice, just like the package Swirl. I have my own mysterious ways of figuring things out, but such approaches provide me with a more structured way of learning or memorizing things. Cool!
+I decided to start with DataCamp. It was fun and encouraging, just like the package Swirl. I have my own mysterious ways of figuring things out, but such approaches provide me with a more structured way of learning or memorizing things. Cool!
 
 Finally I got everything running and could upload my files at my GitHub repository. However, I got a little worried. Perhaps I am not skilled enough for this. But, as is said at Cornell: "Keep Calm and Carry On".
 
