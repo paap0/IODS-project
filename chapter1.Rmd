@@ -17,7 +17,8 @@ This is an *Introduction to Open Data Science* - course: **IODS**.
 
 **I**
 
-<div style="width:50px;height=50px"> ![](https://content.mycutegraphics.com/graphics/hearts/funky-pink-heart.png) </div>
+<div style="width:50px;height=50px"> ![](https://content.mycutegraphics.com/graphics/hearts/funky-pink-heart.png) 
+</div>
 
 **DATA**. 
 
@@ -25,6 +26,7 @@ So let's get started!
 
 ____
 My GitHub repository can be found [here](https://github.com/paap0/IODS-project).
+____
 
 
 
