@@ -1,8 +1,7 @@
-## Chapter 1: Introduction
 
-# First updates
+## **1<sup>st</sup> WEEK**
 
-A few lines about the course are written in my course diary [here](https://paap0.github.io/IODS-project/).
+My course updates can be found in my diary [here](https://paap0.github.io/IODS-project/).
 
 I am a self taught R user and really enjoy learning new things within it. 
 R Markdown and GitHub are completely new to me. The latter seemed logical, but with GitHub it was not love at first sight. Some extra (concrete) headache was (is and will potentially be) created by the outdated computational equipment of mine. 
