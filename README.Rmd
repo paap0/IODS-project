@@ -1,14 +1,28 @@
 
-# First updates
 
-A few lines about the course are written in my course diary [here](https://paap0.github.io/IODS-project/).
 
-I am a self taught R user and really enjoy learning new things within it. 
-R Markdown and GitHub are completely new to me. The latter seemed logical, but with GitHub it was not love at first sight. Some extra (concrete) headache was (is and will potentially be) created by the outdated computational equipment of mine. 
+## Chapter 1: Introduction
 
-I decided to start with DataCamp. It was fun and encouraging, just like the package Swirl. I have my own mysterious ways of figuring things out, but such approaches provide me with a more structured way of learning or memorizing things. Cool!
 
-Finally I got everything running and could upload my files at my GitHub repository. However, I got a little worried. Perhaps I am not skilled enough for this. But, as is said at Cornell: 
+#### IODS-course: **1<sup>st</sup> WEEK**
 
-![](http://i0.kym-cdn.com/entries/icons/original/000/002/747/keepcalm.jpg)
+This is an *Introduction to Open Data Science* - course: **IODS**.
 
+"Open data and content can be _freely used_, _modified_, and _shared_ by _anyone_ for _any purpose_." ([opendefinition.org](http://opendefinition.org)). However, to make use of all the open data available and scrutinize it properly we need basic skills, tools and lots of motivation. This course will familiarize participants with R R Studio, R Markdown and GitHub. Simultanously all will learn some statistics, too. Every week there will be a lecture and scheduled excercises. Interactive platforms DataCamp, MOOC and GitHub make learning flexible and the enthusiastic supervisory team keep the spirits up even at times of desperation.
+
+**I**
+
+ ![](https://content.mycutegraphics.com/graphics/hearts/funky-pink-heart.png) 
+
+
+**DATA**. 
+
+So let's get started!
+
+____
+My GitHub repository can be found [here](https://github.com/paap0/IODS-project).
+
+
+![](https://tuhat.helsinki.fi/portal/files/82888635/PBskot.jpg)
+
+____
