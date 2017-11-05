@@ -1,5 +1,8 @@
 
 ## **1<sup>st</sup> WEEK**
+```{r}
+
+```
 
 My course updates can be found in my diary [here](https://paap0.github.io/IODS-project/).
 
