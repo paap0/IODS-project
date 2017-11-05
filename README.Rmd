@@ -4,7 +4,6 @@
 ## INTRODUCTION
 
 
-#### IODS-course
 
 This is an *Introduction to Open Data Science* - course: **IODS**.
 
