@@ -18,7 +18,7 @@ This is an *Introduction to Open Data Science* - course: **IODS**.
 So let's get started!
 
 ____
-My GitHub repository can be found [here](https://github.com/paap0/IODS-project).
+My GitHub repository can be found [here](https://github.com/paap0/IODS-project) and course updates can be followed reading my diary posts [here](https://paap0.github.io/IODS-project/).
 
 
 ![](https://tuhat.helsinki.fi/portal/files/82888635/PBskot.jpg)
