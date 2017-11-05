@@ -1,5 +1,5 @@
 
-# Insert chapter 2 title here
+## **2<sup>nd</sup> WEEK**:Regression and model validation
 
 *Describe the work you have done this week and summarize your learning.*
 
