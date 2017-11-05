@@ -1,17 +1,9 @@
 
-## **1<sup>st</sup> WEEK**
-```{r}
+# Insert chapter 2 title here
 
-```
+*Describe the work you have done this week and summarize your learning.*
 
-My course updates can be found in my diary [here](https://paap0.github.io/IODS-project/).
 
-I am a self taught R user and really enjoy learning new things within it. 
-R Markdown and GitHub are completely new to me. The latter seemed logical, but with GitHub it was not love at first sight. Some extra (concrete) headache was (is and will potentially be) created by the outdated computational equipment of mine. 
-
-I decided to start with DataCamp. It was fun and encouraging, just like the package Swirl. I have my own mysterious ways of figuring things out, but such approaches provide me with a more structured way of learning or memorizing things. Cool!
-
-Finally I got everything running and could upload my files at my GitHub repository. However, I got a little worried. Perhaps I am not skilled enough for this. But, as is said at Cornell: 
-
-![](http://i0.kym-cdn.com/entries/icons/original/000/002/747/keepcalm.jpg)
-
+- Describe your work and results clearly. 
+- Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
+- Assume the reader has no previous knowledge of your data or the more advanced methods you are using  
