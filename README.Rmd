@@ -4,7 +4,7 @@
 ## INTRODUCTION
 
 
-This is an *Introduction to Open Data Science* - course: **IODS**.
+This is *the* *Introduction to Open Data Science* - course: **IODS**.
 
 "Open data and content can be _freely used_, _modified_, and _shared_ by _anyone_ for _any purpose_." ([opendefinition.org](http://opendefinition.org)). However, to make use of all the open data available and scrutinize it properly we need basic skills, tools and lots of motivation. This course will familiarize participants with R R Studio, R Markdown and GitHub. Simultanously all will learn some statistics, too. Every week there will be a lecture and scheduled excercises. Interactive platforms DataCamp, MOOC and GitHub make learning flexible and the enthusiastic supervisory team keep the spirits up even at times of desperation.
 
@@ -20,7 +20,7 @@ So let's get started!
 ____
 My GitHub repository can be found [here](https://github.com/paap0/IODS-project) and course updates can be followed reading my diary posts [here](https://paap0.github.io/IODS-project/).
 
-More information about me and my research oriented activities can be found [here](https://tuhat.helsinki.fi/portal/en/persons/paula-bergman(63b12e70-9e74-4e0a-bc62-fbc5dd300802).html).
+My research oriented activities are scrutinized [here](https://tuhat.helsinki.fi/portal/en/persons/paula-bergman(63b12e70-9e74-4e0a-bc62-fbc5dd300802).html).
 
 ![](https://tuhat.helsinki.fi/portal/files/82888635/PBskot.jpg)
 
