@@ -100,8 +100,8 @@ mod2<-lm(points~attitude,data=learning2014)
 summary(mod2)
 ```
 
-Thus, the regression model is $y=3.5255x_{1}+11.6372$,R<sup>2</sup>=0.1906, where $y=$points and $x_{1}=$attitude
-is chosen. According to the model a one point increase in attitude increases the exam points by 3.5. Explanatory power of the final model has a little smaller R-squared value (0.1906) than did the first one (0.2074) indicating that the model with only one predictor (attitude) predicts appoximately 19.6% of the variation in students' exam points.
+Thus, the regression model $y=3.5255x_{1}+11.6372$,R<sup>2</sup>=0.1906, where $y=$points and $x_{1}=$attitude
+is chosen. According to the model a one point increase in attitude increases the exam points by 3.5. Explanatory power of the final model has a little smaller R-squared value (0.1906) than did the first one (0.2074) indicating that the model with only one predictor (attitude) predicts appoximately 19% of the variation in students' exam points.
 
 ### Diagnostic plots
 
