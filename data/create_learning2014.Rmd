@@ -1,0 +1,31 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+#Paula paap0 Bergman Nov 2017 Week 2
+
+```{r }
+#read the data
+learning2014<- read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt",sep="\t",header=TRUE)
+
+```
+
+dim(learning2014) #there are 183 observatios and 60 variables in the dataset
+str(learning2014) #apart from "gender" the variables are integer-values
+
+Create an analysis dataset 
+with the variables gender, age, attitude, deep, stra, 
+surf and points by combining questions in the learning2014 data,
+
+learning2014<- read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS2-meta.txt",header=TRUE)
+
+
+data<-learning2014[c("gender", "Age", "attitude","deep","stra", "surf", "points")]
+learning2014$De
