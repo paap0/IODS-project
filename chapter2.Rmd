@@ -38,7 +38,7 @@ dim(learning2014)
 
 #### Summaries
 
-Descriptive statics are shown both as a preliminary summary as well as as a summary stratified by gender to investigate wheather there are clear differences between males and females. The dataset is further explored using pairs for basic scatter plots and ggpairs command (male=blue, female=red) producing scatter plots, mean plots and histograms. 
+Descriptive statics are shown both as a preliminary summary and as a summary stratified by gender to investigate wheather there are clear differences between males and females. The dataset is further explored using pairs for basic scatter plots and ggpairs command (male=blue, female=red) producing scatter plots, mean plots and histograms. 
 
 Basic summaries of the variables
 
