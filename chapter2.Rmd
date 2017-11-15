@@ -1,9 +1,119 @@
 
-## **2<sup>nd</sup> WEEK**:Regression and model validation
 
-*Describe the work you have done this week and summarize your learning.*
+---
+title: ""
+output:
+  html_document:
+    toc: true
+    toc_depth: 4
+---
+
+## **2<sup>nd</sup> WEEK**: Regression and model validation
+
+### Introduction
+
+This week's analysis exercise focuses on linear regression analysis: carrying it out, interpreting the results and validating the generated model. Based on a study on learning approaches and students achievements in an introductory statistics course in Finland an original dataset learning2014 including 183 responses and 60 variables was provided. It can be found [original data here](http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt) and information about it [metadata here](http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-meta.txt) . Briefly, the dataset describes student' Likert scaled (1-5) ratings of deep, surface and strategic learning styles, attitudes towards statistics, exam points and gender. More specifically, deep approach refers to intention to maximize understanding, surface to memorizing without understanding and strategic to ways students organize their studying.
+
+The original dataset needed to be edited for the exercise 2 analysis according to [this R script](https://github.com/paap0/IODS-project/blob/master/data/create_learning2014.R). Firstly, the variables related to deep, surface and strategic learning were combined and averaged, and variable attitude rescaled. Thereafter, observations with zero exam points were excluded.  The final dataset included seven variables:gender, age, attitude, deep, stra, surf and points from 160 respondents.
+
+```{r include=FALSE, cache=FALSE}
+#Define packages required 
+library(dplyr)
+library(GGally)
+library(ggplot2)
+library(tableone)
+```
 
 
-- Describe your work and results clearly. 
-- Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
-- Assume the reader has no previous knowledge of your data or the more advanced methods you are using  
+### Basic characteristics of the dataset
+
+Data is read in and the structure of the dataset is checked.
+```{r}
+# Read in the dataset
+learning2014<-read.csv(file="learning2014.csv", header=TRUE)
+# Inspect the structure
+str(learning2014)
+dim(learning2014)
+```
+
+#### Summaries
+
+Descriptive statics are shown both as a preliminary summary as well as as a summary stratified by gender to investigate wheather there are clear differences between males and females. The dataset is further explored using pairs for basic scatter plots and ggpairs command (male=blue, female=red) producing scatter plots, mean plots and histograms. 
+
+Basic summaries of the variables
+
+```{r} 
+#Basic summaries
+summary(learning2014)
+```
+
+Grouped summaries by gender. In the package tableone the command CreateTableOne simultanously does group comparisons.
+
+```{r}
+#Grouped summaries
+CreateTableOne(vars=c("age", "attitude", "deep", "stra", "surf", "points"), strata=c("gender"),data=learning2014 )
+```
+
+#### Graphical overviews
+
+Preliminary scatter plots 
+```{r}
+#Scatter plots
+p1 <- pairs(learning2014[-1], col=learning2014$gender)
+```
+
+
+A more advanced plot matrix:
+```{r} 
+#Matrix of plots
+p <- ggpairs(learning2014, mapping = aes(col = gender), lower = list(combo = wrap("facethist", bins = 20)), title="Figure 2. Graphical overview of the learning2014 data")
+p
+```
+
+
+From the output it can be captured that apart from the age all of the variables seem more or less normally distributed. The distributions are similar for both genders apart from the attitude: females seem to have lower average scores (mean(sd)) 2.99(0.73) versus 3.44(0.65), respectively.
+
+The cross-correlation table shows that the highest correlation exists between exam points and attitude. Moreover, there is a slight correlation between surface as well as strategic learning styles with the exam points. The strength of other correlations is not noteworthy. If we split the gender variable, there are some potentially interesting differences in the distributions. However, to keep the scope within reasonable limits with regard to the exercise requirements their further investigation is not carried out.
+
+### Fitting regression model
+
+A multiple linear regression model with three explanatory variables (attitude, strategic and surface learning) selected based on the preliminary inspection of the dataset is fitted to investigate the relationship between them and the dependent outcome variable final exam points.
+
+```{r}
+#First model with three explanatory variables
+mod<-lm(points~attitude+stra+surf,data=learning2014)
+summary(mod)
+```
+
+The summary report of the fitted model shows that attitude has a positive impact on the final exam points. The estimates for strategic and surface learning prove to be non-signicifant.  
+
+Other two models are fitted by firstly excluding surf and then stra. As the variables remain non-significant at the .05 level(data not shown) a final model is fitted including only one explanatory variable: attitude. 
+
+```{r include=FALSE, cache=FALSE}
+summary(lm(points~attitude+stra,data=learning2014))
+summary(lm(points~attitude+surf,data=learning2014))
+```
+
+```{r} 
+#Final model with only one explanatory variable
+mod2<-lm(points~attitude,data=learning2014)
+summary(mod2)
+```
+
+Thus, the regression model is $y=3.5255x_{1}+11.6372$,R<sup>2</sup>=0.1906, where $y=$points and $x_{1}=$attitude
+is chosen. According to the model a one point increase in attitude increases the exam points by 3.5. Explanatory power of the final model has a little smaller R-squared value (0.1906) than did the first one (0.2074) indicating that the model with only one predictor (attitude) predicts appoximately 19.6% of the variation in students' exam points.
+
+### Diagnostic plots
+
+The variable estimates might be biased if the model does not actually fit the data. Thus, the model fit needs to be explored and is performed here using diagnostic plots: Residals versus Fitted values, normal QQ-plot and residuals vs Leverage.  
+
+```{r}
+#Diagnostic plots for the final model
+par(mfrow=c(2,2))
+plot(mod2,which=c(1,2,5))
+```
+
+
+Firstly, it is assumed that the size of errors in the model are not dependent on the independent variables. This constant variance of errors assumption seems to hold well as can be seen as the residuals are plotted versus the fitted values. Secondly, the QQ plot implies that deviations of residuals from the theoretical normal distribution seem minimal.Thirdly, standardized residuals plotted against leverage reveal no clear outliers as all observations are grouped close to the plot and no outliers exist.
+
+All these assumptions are valid.
