@@ -5,7 +5,8 @@
 #University of Camerino. Referred 05/02/17.
 #https://archive.ics.uci.edu/ml/datasets/STUDENT+ALCOHOL+CONSUMPTION
 
-#HOWEVER, for the exercise unzipped from the folder provided kindy by Anna
+#HOWEVER, for the exercise unzipped from the folder provided kindly by 
+#assistant Anna (see IODS discussion forum for details)
 
 
 ############################
