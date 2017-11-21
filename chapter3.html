@@ -565,7 +565,7 @@ loss_func&lt;-function(class,prob){
 #Errors computed and stored
 cv &lt;- cv.glm(data = alc_study, cost = loss_func, glmfit = m2, K = 10)
 cv$delta[1] # Print the average number of wrong predictions.</code></pre>
-<pre><code>## [1] 0.2722513</code></pre>
+<pre><code>## [1] 0.2565445</code></pre>
 <p>A ten-fold cross-validation shows that on average 25.9% of the observations are missclassified under our model with three explanatory variables: sex, famrel and absencees. The average number of wrong predictions in the cross validation is only slightly better than in the DataCamp exercise. The model could be improved further by testing more variables.</p>
 <p>Ref. Fabio Pagnotta’s and Hossain Mohammad Amran’s Using Data Mining To Predict Secondary School Student Alcohol Consumption (2008), published by Department of Computer Science of the University of Camerino</p>
 </div>
