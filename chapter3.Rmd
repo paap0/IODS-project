@@ -98,7 +98,7 @@ glimpse(alc)
 
 
 
-The final data set includes 382 respondents and 35 both integer and factorial variables. The names of the variables are listed below (explanations can be found   [here](https://archive.ics.uci.edu/ml/datasets/Student+Performance)
+The final data set includes 382 respondents and 35 both integer and factorial variables. The names of the variables are listed below (explanations can be found   [here](https://archive.ics.uci.edu/ml/datasets/Student+Performance))
 :
 
 ```{r}
@@ -476,7 +476,7 @@ table(high_use=alcbest$high_use,prediction=predictions) %>% addmargins %>% round
 ```
 
 
-To conclude, the results of the final model as odds ratios with confidence intervals:
+To conclude, the results of the final model as odds ratios with th corresponding confidence intervals:
 
 ```{r include=FALSE, cache=FALSE}
 OR.vector <- exp(mbest$coef)
@@ -495,6 +495,9 @@ stargazer(mbest, coef = list(OR.vector), ci = T,
           dep.var.labels = "Dependent variable:More than average alcohol usage" )
 
 ```
+
+
+
 
 
 

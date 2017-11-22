@@ -395,7 +395,7 @@ glimpse(alc)</code></pre>
 ## $ G3         &lt;int&gt; 8, 8, 11, 14, 12, 14, 12, 10, 18, 14, 12, 12, 13, 1...
 ## $ alc_use    &lt;dbl&gt; 1.0, 1.0, 2.5, 1.0, 1.5, 1.5, 1.0, 1.0, 1.0, 1.0, 1...
 ## $ high_use   &lt;lgl&gt; FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FAL...</code></pre>
-<p>The final data set includes 382 respondents and 35 both integer and factorial variables. The names of the variables are listed below (explanations can be found <a href="https://archive.ics.uci.edu/ml/datasets/Student+Performance">here</a> :</p>
+<p>The final data set includes 382 respondents and 35 both integer and factorial variables. The names of the variables are listed below (explanations can be found <a href="https://archive.ics.uci.edu/ml/datasets/Student+Performance">here</a>) :</p>
 <pre class="r"><code>#Names of the variables
 colnames(alc)</code></pre>
 <pre><code>##  [1] &quot;school&quot;     &quot;sex&quot;        &quot;age&quot;        &quot;address&quot;    &quot;famsize&quot;   
@@ -658,7 +658,7 @@ testerror&lt;-cv$delta[1]</code></pre>
 #Errors computed and stored
 cvbetter &lt;- cv.glm(data = alc, cost = loss_func, glmfit = mbetter, K = 10)
 cvbetter$delta[1] # Print the average number of wrong predictions.</code></pre>
-<pre><code>## [1] 0.2513089</code></pre>
+<pre><code>## [1] 0.2539267</code></pre>
 <p>Adding <span style="color:orange">age</span> to the model hardly improves the performance yielding just a little bit lower testing error.</p>
 </div>
 <div id="further-cross-validation-and-model-comparisons" class="section level3">
@@ -671,7 +671,7 @@ full&lt;-glm(high_use~.,family=binomial,data=alcs)
 #Errors computed and stored
 cvfull &lt;- cv.glm(data = alcs, cost = loss_func, glmfit = full, K = 10)
 cvfull$delta[1] # Print the average number of wrong predictions.</code></pre>
-<pre><code>## [1] 0.2277487</code></pre>
+<pre><code>## [1] 0.2251309</code></pre>
 <p>The full model based on this data set still has a reasonably high prediction error.</p>
 </div>
 <div id="model-reduction" class="section level4">
@@ -795,7 +795,7 @@ table(high_use=alcbest$high_use,prediction=predictions) %&gt;% addmargins %&gt;%
 ##    FALSE   254   14 268
 ##    TRUE     64   50 114
 ##    Sum     318   64 382</code></pre>
-<p>To conclude, the results of the final model as odds ratios with confidence intervals:</p>
+<p>To conclude, the results of the final model as odds ratios with th corresponding confidence intervals:</p>
 <pre class="r"><code>stargazer(mbest, coef = list(OR.vector), ci = T, 
           ci.custom = list(CI.vector), p = list(p.values), 
           single.row = T,align=TRUE, type = &quot;html&quot;,
