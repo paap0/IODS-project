@@ -11,12 +11,10 @@ output:
 ## **3<sup>rd</sup> WEEK**: Logistic regression
 
 ### Introduction
+Data including grades, demographic, social and school related features were collected in two Portuguese schools using school reports and questionnaires and stored as two separate datasets regarding performance in distinct subjects, namely Mathematics and Portuguese.
 
-Data including grades, demographic, social and school related features were collected in two Portuguese schools using school reports and questionnaires . There are two separate datasets regarding performance in distinct subjects, namely Mathematics and Portuguese.
+The original data of the analysis in this exercise are freely available as a [zip file](https://archive.ics.uci.edu/ml/machine-learning-databases/00320/). Additional  [metadata](https://archive.ics.uci.edu/ml/datasets/Student+Performance) information describes basic characteristics of the data sets. For the purporse of this particular exercise they needed to be joined and edited according to [this R script](https://github.com/paap0/IODS-project/blob/master/data/create_alc.R). The variables not used for joining the two data were combined by averaging them. An additional variable *high_use* was created by taking the average of the sum of alcohol consumption during weekdays and weekends, which was thereafter further modified to yield a logical TRUE or FALSE *high_use* variable. A treshold value for higher than average alcohol consumption was chosen to be more than 2 weekly proportions.
 
-The original data of the analysis in this exercise are freely available as a [zip file](https://archive.ics.uci.edu/ml/machine-learning-databases/00320/). Additional  [metadata](https://archive.ics.uci.edu/ml/datasets/Student+Performance) information describes basic characteristics of the data set.
-
-The original data sets needed to be joined and edited for the analysis according to [this R script](https://github.com/paap0/IODS-project/blob/master/data/create_alc.R). The variables not used for joining the two data were combined by averaging them. An additional variable *high_use* was created by taking the average of the sum of alcohol consumption during weekdays and weekends, which was thereafter further modified to yield a logical TRUE or FALSE *high_use* variable if greater than 2 weekly proportions or not, respectively. 
 
 
 ```{r include=FALSE, cache=FALSE}
@@ -31,6 +29,9 @@ library(magrittr)
 library(boot)
 library(stargazer)
 library(gmodels)
+library(MASS)
+library(leaps)
+library(bestglm)
 #Multiplot
 # Multiple plot function
 #
@@ -93,16 +94,23 @@ glimpse(alc)
 ```
 
 
-The final data set includes 382 respondents and 35 both numerical (5 scaled) and factorial variables.
+
+The final data set includes 382 respondents and 35 both numerical (5 scaled) and factorial variables. The names of the variables are listed below:
 
 ```{r}
 #Names of the variables
 colnames(alc)
 ```
 
+#### Variable selection
 
-The purpose is to investigate the relationship between TRUE/FALSE *high alcohol consumption* and four chosen independent variables. Based on assumed impact and personal interest they are:
 
+```{r echo=FALSE, results='asis'}
+#Subset of the preliminary dataset
+alc_study<-alc[c("high_use","sex","absences","famrel","health")]
+```
+
+The purpose is to investigate the relationship between *high alcohol consumption* and four chosen independent variables. Based on assumed impact and personal interest they are:
 
 
  Variable Name | Explanation | Classification  
@@ -119,19 +127,58 @@ The purpose is to investigate the relationship between TRUE/FALSE *high alcohol 
 #### Hypotheses
 
 Briefly, I assume that men drink more, more school absences are associated with drinking habits, students with worse family relationships drink more, and better health is associated with less alcohol consumption.
-Specifically stated hypotheses are: **H1: <span style="color:red">*Males are more prone to belong to high users of alcohol defined by more than 2 proportions a week than females*</span> H2: <span style="color:green">*Students with more school absencies drink more than those attending school more frequently.*</span> H3: <span style="color:blue">*Students with very good family relationships consume less alcohol than do students with bad family relationships.*</span>  H4: <span style="color:orange">*Very good health status is protective for high alcohol consumption (more than 2 weekly proportions) compared to very bad health status.*</span>**
+Specifically stated hypotheses are: **<span style="color:red">*Males are more prone to belong to high users of alcohol defined by more than 2 proportions a week than females*</span> <span style="color:green">*Students with more school absencies drink more than those attending school more frequently.*</span>  <span style="color:blue">*Students with very good family relationships consume less alcohol than do students with bad family relationships.*</span>  <span style="color:orange">*Very good health status is protective for high alcohol consumption (more than 2 weekly proportions) compared to very bad health status.*</span>**
+
+
+
+#### Graphical overviews
+
+
+Let´s take the first look graphically: distributions and correlations as well as suitable bar- and boxplots grouped by *high alcohol usage* to better understand the relationship between the chosen variables and the outcome. 
+To have multiple figures on the same plot I use the great [multiplot]("http://www.peterhaschke.com/r/2013/04/24/MultiPlot.html") script.
+
+
+```{r}
+#Matrix of plots
+ggpairs(alc_study[-1], mapping = aes(col = sex), lower = list(combo = wrap("facethist", bins = 20)), title="Graphical overview of the 4 variables")
+
+
+p1 <- ggplot(alc_study, aes(sex)) + geom_bar(aes(fill = high_use), position = "dodge", stat="count") + xlab('Gender')+ggtitle("Gender") +scale_fill_manual(values=c("lightblue","red"))+
+  theme(plot.title = element_text(size=9))
+
+
+
+p2 <- ggplot(alc_study, aes(x=high_use,y= absences,fill=high_use)) + geom_boxplot(outlier.colour="black", outlier.shape=16,
+             outlier.size=2, notch=FALSE) +
+stat_summary(fun.y=mean, geom="point", shape=23, size=4)+ggtitle("Absences (means included)")+
+scale_fill_manual(values=c("lightblue","red"))+
+theme(plot.title = element_text(size=9))
+
+
+p3 <- ggplot(alc_study, aes(x=high_use,y= famrel,fill=high_use)) + geom_boxplot(outlier.colour="black", outlier.shape=16,
+             outlier.size=2, notch=FALSE) +
+stat_summary(fun.y=mean, geom="point", shape=23, size=4)+ggtitle("Family relationships (means included)")+
+scale_fill_manual(values=c("lightblue","red"))+
+theme(plot.title = element_text(size=9))
 
 
 
 
-#### Variable selection and summaries
+p4 <- ggplot(alc_study, aes(x=high_use,y= health,fill=high_use)) + geom_boxplot(outlier.colour="black", outlier.shape=16,
+             outlier.size=2, notch=FALSE) +
+stat_summary(fun.y=mean, geom="point", shape=23, size=4)+ggtitle("Health status (means included)")+
+scale_fill_manual(values=c("lightblue","red"))+
+  theme(plot.title = element_text(size=9))
 
-Descriptive statistics are shown as a summary grouped by *high_use* to get a preliminary idea of the data set.In the package tableone the command CreateTableOne simultanously does group comparisons.
 
-```{r echo=FALSE, results='asis'}
-#Subset of the preliminary dataset
-alc_study<-alc[c("high_use","sex","absences","famrel","health")]
+
+multiplot(p1, p2, p3, p4, cols = 2)
+
 ```
+
+#### Grouped summary statistics and preliminary comments
+
+In addition to data visualization, descriptive statistics are shown numerically as a summary grouped by *high_use* to get a preliminary, quantitative idea of the data set.In the package tableone the command CreateTableOne simultanously does group comparisons.
 
 
 ```{r}
@@ -141,58 +188,16 @@ CreateTableOne(vars=c("sex","absences","famrel","health"), strata=c("high_use"),
 
 ```
 
-There are more high alcohol user males than there are females. The mean absence scores are higher among the high users and the mean score for family relationships is lower among them. However, the mean health score among the high users is slightly higher for the high users than for the non-high-users, which observation differs from the preliminary assumption. 
+There are proportionally more male high users than there are females. Family relationships on average are better for the ones not using a lot of alcohol (4.00 vs 3.78). However, there are no differencies in the median values (4.00 vs 4.00). Both the  mean (6.37) and median (4.00) values for absences are higher in the higher usage group than in the group of students consuming less than average amount (3.00,3.71). There are also quite a few outliers in both groups. Surprisingly, the high-user group members have higher current health scores (mean=3.70, median=4.00) than do the non-high-user ones (3.52,4.00). Yet, the differences are small.
 
-
-
-#### Graphical overviews
-
-
-Let´s take a look at the variables graphically. To have multiple figures on the same plot I use the great [multiplot]("http://www.peterhaschke.com/r/2013/04/24/MultiPlot.html") script.
-
-```{r} 
-
-```
-
-```{r}
-#Matrix of plots
-ggpairs(alc_study[-1], mapping = aes(col = sex), lower = list(combo = wrap("facethist", bins = 20)), title="Graphical overview of the 4 variables")
-
-
-p1 <- ggplot(alc_study, aes(sex)) + geom_bar(aes(fill = high_use), position = "dodge", stat="count") + xlab('Gender')+ggtitle("Gender") +scale_fill_manual(values=c("lightblue","red"))
-
-
-p2 <- ggplot(alc_study, aes(x=high_use,y= absences,fill=high_use)) + geom_boxplot(outlier.colour="black", outlier.shape=16,
-             outlier.size=2, notch=FALSE) +
-stat_summary(fun.y=mean, geom="point", shape=23, size=4)+ggtitle("Absences (means included)")+
-scale_fill_manual(values=c("lightblue","red"))
-
-
-p3 <- ggplot(alc_study, aes(x=high_use,y= famrel,fill=high_use)) + geom_boxplot(outlier.colour="black", outlier.shape=16,
-             outlier.size=2, notch=FALSE) +
-stat_summary(fun.y=mean, geom="point", shape=23, size=4)+ggtitle("Family relationships (means included)")+
-scale_fill_manual(values=c("lightblue","red"))
-
-
-p4 <- ggplot(alc_study, aes(x=high_use,y= health,fill=high_use)) + geom_boxplot(outlier.colour="black", outlier.shape=16,
-             outlier.size=2, notch=FALSE) +
-stat_summary(fun.y=mean, geom="point", shape=23, size=4)+ggtitle("Health status (means included)")+
-scale_fill_manual(values=c("lightblue","red"))
-
-
-multiplot(p1, p2, p3, p4, cols = 2)
-
-```
-
-A greater proportion of males belong to the *high_use* group than of females. The mean value for the quality of family relationships is higher for the ones not using more than average amount of alcohol (4.00 vs 3.78). However, there are no differencies in the median values (4.00 vs 4.00). Both the  mean (6.37) and median (4.00) values for absences are higher in the higher usage group than in the group of students consuming less than average amount (3.00,3.71). There are also quite a few outliers in both groups. Surprisingly, the high-user group members have higher current health scores (mean=3.70, median=4.00) than do the non-high-user ones (3.52,4.00). 
-
-Thus, based on both the summary statistics and the graphical overview it seems that all of the variables except health are at least to some extent associated with the level of alcohol consumption. Further, there are no relevant correlations between the chosen variables. To further explore the associations a logistic regression analysis is carried out.
+Thus, based on both the graphical and numerical overviews it seems that all of the variables except health are at least to some extent associated with the level of alcohol consumption as I hypotesized. Additionally, it has been investigated that there are no relevant correlations between the chosen variables. To further explore the associations a logistic regression analysis is carried out.
 
 
 
 ### Fitting the model
   
-A logistic regression model with four explanatory variables selected based on the preliminary interest is fitted to identify factors related to *higher than average student alcohol consumption. investigate the relationship between them and the binary target variable*  Logistic regression is basic approach for binary outcomes and its results provide probability estimates of the event happening.
+  
+A logistic regression model with four explanatory variables selected based on the preliminary interest is fitted to identify the ones related to *higher than average student alcohol consumption*. Logistic regression is basic approach for binary outcomes and its results provide probability estimates of the event happening.
 
 ```{r}
 #First model with four explanatory variables
@@ -201,42 +206,49 @@ summary(m1)
 ```
 
 The summary of the model confirm what could already be suspected based on the preliminary grouped summaries and plots.
-The variables sex, absences and famrel are significant at the 5 % level. The effect of health was not even borderline significant (p=0.3426).  
+The variables sex, absences and famrel are significant at the 5 % level. The effect of health is not even borderline significant (p=0.3426).  From the estimates it can also be captured that the correlation between famrel and *high use* is negative and the correlation between absences and *high use* is positive. Furthermore, being a male positively correlates with the outcome, i.e. increases the risk of being a high consumer of alcohol.
 
-```{r}
+
+#### Odds, odds ratio and confidence intervals
+
+To better understand the odds ratio which is used to quantify the relationship between an explanatory factor and the target variabe the term *odds* should be clarified. It is the probability divided by the opposite of that probability. Logically, the ratio of two odds is called *the odds ratio*.Odds higher than 1 mean that the factor is positively associated with event happening, and odds less than 1 refer to a negative, or, if the event is unwanted (e.g. death), a protective effect.
+To further complicate the matter, based on the primary equation, in the logistic regression model the target variable is not purely odds, but the log of odds. Thus, in the following table 1) the odds are obtained by exponentiating the summary estimates and 2) the profile likelihood-based confidence intervals by using the confint command from MASS package:
+
+```{r include=FALSE, cache=FALSE}
 OR<-coef(m1) %>% exp()
 CI<-confint(m1) %>% exp()
+```
+
+```{r}
 cbind(OR, CI)
 ```
 
 
-To better understand the summary output and its interpretations two terms should be understood: *Odds* is the probability divided by the opposite of that probability. Further, the ratio of two odds is called *the odds ratio*. Odds ratio can be used to quantify the relationship between an explanatory factor and the target variable. Odds higher than 1 mean that the factor is positively associated with event happening, and odds less than 1 refer to a negative, or, if the event is unwanted (e.g. death), a protective effect.
-In the logistic regression model the target variable is not purely odds, but the lof of odds. Thus, ecponents of the coefficient can be interpreted as odds ratios bwteeen a unit change in the cosserponding explanatory variable
+Apart from the variable health, the confidence intervals do not include one, as suspected, referring to a statistically significant factor. If any given confidence interval would include 1 it would mean that the factor could have either a positive or a negative effect, or no effect at all on the risk of the outcome.
 
-Confidence intervals for the odds ratio for health includes 1, as assumed.  
+#### Second model
 
-Next, the non-significant variable health is excluded and the model is fitted again. The odds are obtained by exponentiating the estimates and profile likelihood-based confidence intervals by using the confint command from MASS package:
+Next, the non-significant variable health is excluded and the model is fitted again. 
 
 ```{r}
 #First model with four explanatory variables
 m2<-glm(high_use~sex+absences+famrel,data=alc_study,family="binomial")
+summary(m2)
 ```
+
+
+Now all of the variables in the model are significant at the 5 % level.  
 
 ```{r}
 cbind(exp(coef(m2)),exp(confint(m2)))
 ```
 
-Now all of the variables in the model are significant at the 5% level. E.g. an increase of one unit in the student's school absences  increases his/her log-odds to be a high alcohol consumer by 0.09. The confidence interval can be constructed using normal approximation for the parameter estimate: \hat{\beta}_i \pm z^{\alpha/2}SE(\hat{\beta}_i) . The 95% confidence interval is (0.009, 0.037). 
+The significant odds ratios reveal that males have 2.8 (1.7 - 4.5) times higher odds to be high consumers of alcohol than females and that with increasing absences the person is more likely to be a high consumer. On the contrary, the better the family relationships the less likely the person is to be a high consumer of alcohol.
 
-The significant odds ratios reveal that males are 2.8 times more likely to be high consumers of alcohol than females and that with increasing absences the person is more likely to be a high consumer. On the contrary, the better the family relationships the less likely the person is to be a high consumer of alcohol.
+More specifically, the coefficient for absences is 0.09352 and can be interpreted as the expected change in log odds for a one-unit increase in the number of absences. The odds ratio can be calculated by exponentiating this value to get 1.0980288 which means we expect to see about 10% increase in the odds of being in a high alcohol user, for a one-unit increase in absences.
 
-The coefficient for female= 0.59278 which corresponds to the log of odds ratio between the female group and male group. The odds ratio equals 1.81 which means the odds for females are about 81% higher than the odds for males.
 
-The coefficient for math= 0.15634 which is interpreted as the expected change in log odds for a one-unit increase in the math score. The odds ratio can be calculated by exponentiating this value to get 1.16922 which means we expect to see about 17% increase in the odds of being in an honors class, for a one-unit increase in math score
-
-```{r, results='asis'}
-stargazer(m2, header=FALSE, type='html')
-```
+### Predictive power
 
 The second model will be used to explore the predictive power:
 
@@ -251,7 +263,7 @@ table(high_use=alc_study$high_use,prediction=predictions) %>% addmargins %>% rou
 table(high_use=alc_study$high_use,prediction=predictions) %>% prop.table %>% addmargins() %>% round(digits=2)
 ```
 
-114 predictions out of 382 were wrong. There are altogether 256 true negatives and 29 true positives, 85 false negatives and 12 false positives. To conclude, the model predicts high consumption less frequently than it really is as can be demonstrated graphically:
+Altogether 114 predictions out of 382 were wrong. There are 256 true negatives and 29 true positives, 85 false negatives and 12 false positives. To conclude, the model predicts high consumption less frequently than it really is as can be demonstrated graphically:
 
 ```{r}
 hu <- as.data.frame(prop.table(table(alc_study$high_use)))
@@ -260,15 +272,15 @@ pp1 <- ggplot(hu, aes(Var1, Freq)) + geom_col(aes(fill = Var1)) + scale_y_contin
 scale_fill_manual(values=c("lightblue","darkred"))+
  theme(
 plot.title = element_text(color="green", size=14, face="bold.italic"),
-axis.title.x = element_text(color="green", size=14, face="bold"),
+axis.title.x = element_text(color="green", size=9, face="bold"),
 axis.title.y = element_text(color="#993333", size=14, face="bold")
 )
 
-pp2 <- ggplot(pred, aes(Var1, Freq)) + geom_col(aes(fill = Var1)) + scale_y_continuous(limits = 0:1) + ylab('frequency') + xlab('PREDICTED high use') + theme(legend.position = 'none')+
-scale_fill_manual(values=c("lightblue","darkred"))+
+pp2 <- ggplot(pred, aes(Var1, Freq)) + geom_col(aes(fill = Var1)) + scale_y_continuous(limits = 0:1) + ylab('frequency') + xlab('3 variable PREDICTED high use') + theme(legend.position = 'none')+
+scale_fill_manual(values=c("lightblue","orange"))+
  theme(
 plot.title = element_text(color="red", size=14, face="bold.italic"),
-axis.title.x = element_text(color="red", size=14, face="bold"),
+axis.title.x = element_text(color="orange", size=8, face="bold"),
 axis.title.y = element_text(color="#993333", size=14, face="bold")
 )
 
@@ -276,7 +288,7 @@ multiplot(pp1, pp2, cols = 2)
 
 ```
 
-Since we know how to make predictions with our model, we can also compute the average number of incorrect predictions. In our model it is 25.4% suggesting that the model is lacking accuracy.Logistic regression aims to minimize the incorrectly classified observations.
+Since we know how to make predictions with our model, we can also compute the average number of incorrect predictions. In our model it is 25.4% suggesting that the model is lacking accuracy.Logistic regression aims to minimize the incorrectly classified observations. However, the performance of the generated model is better than purely guessing or just tossing a coin, which has the probability of 50 % of predicting the one or another outcome.
 
 ```{r}
 #loss_func from DataCamp exercises
@@ -286,6 +298,7 @@ loss_func<-function(class,prob){
 }
 loss_func(class = alc_study$high_use, alc_study$probability)
 ```
+
 
 ### Cross validation
 
@@ -302,7 +315,169 @@ cv <- cv.glm(data = alc_study, cost = loss_func, glmfit = m2, K = 10)
 cv$delta[1] # Print the average number of wrong predictions.
 ```
 
-A ten-fold cross-validation shows that on average 25.9% of the observations are missclassified under our model with three explanatory variables: sex, famrel and absencees. The average number of wrong predictions in the cross validation is only slightly better than in the DataCamp exercise. The model could be improved further by testing more variables.
+A ten-fold cross-validation shows that on average 25.9% of the observations are missclassified under our model with three explanatory variables: sex, famrel and absencees. The average number of wrong predictions in the cross-validation is about the same as in the DataCamp exercise (26%). 
+
+However, if the goal of a study like this would be identify, and thereafter to implement measures to control risk factors for high alcohol usage we would not succeed very well. It seems that the model is still missing relevant risk factors. Thus, I will try to improve the model by testing more variables.
+
+```{r}
+mbetter<-glm(high_use~famrel+absences+sex+age,family=binomial,data=alc)
+#Errors computed and stored
+cvbetter <- cv.glm(data = alc, cost = loss_func, glmfit = mbetter, K = 10)
+cvbetter$delta[1] # Print the average number of wrong predictions.
+```
+
+Adding age to the model slightly improves the performance yielding a snakker prediction error, namely 24.6%.
+
+#### Further cross validation 
+
+A data set with 11 integer and one factorial variable (gender) is used to improve the predictive accuracy.
+
+```{r}
+alcs<-alc[c("age","Medu","Fedu","failures","G3","sex","absences","famrel","health","goout","studytime","freetime","high_use")]
+full<-glm(high_use~.,family=binomial,data=alcs)
+#Errors computed and stored
+cvfull <- cv.glm(data = alcs, cost = loss_func, glmfit = full, K = 10)
+cvfull$delta[1] # Print the average number of wrong predictions.
+```
+The full model based on this data set still has a prediction error of 23.3%. 
+
+To make a purposeful selection firstly stepAIC() and thereafter bestglm() are used. More information about the selection methods can be found [here]("https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4842399/")
+
+```{r}
+library(leaps)
+library(MASS)
+library(bestglm)
+scope<-stepAIC(full,scope=list(lower=~sex+absences+famrel,upper=full),trace=FALSE)
+scope$anova
+
+bestglm(alcs,IC="BIC",family=binomial)
+```
+
+Based on the outputs both mAIC and mbest models are fitted.
+
+Let's try another model by adding failures and going out with friends to the model as explanatory variables.
+
+```{r}
+mAIC<-glm(high_use ~ sex + absences + famrel + goout + studytime,family=binomial,data=alcs)
+mbest<-glm(high_use ~ sex + absences + famrel + goout ,family=binomial,data=alcs)
+#Errors computed and stored
+cvAIC <- cv.glm(data = alcs, cost = loss_func, glmfit = mAIC, K = 10)
+cvAIC$delta[1] # Print the average number of wrong predictions.
+cvbest <- cv.glm(data = alcs, cost = loss_func, glmfit = mbest, K = 10)
+cvbest$delta[1] # Print the average number of wrong predictions.
+```
+
+```{r}
+probabilities<-predict(full,type="response")
+predictions<-probabilities >0.5
+# Add the probabilities
+alcsfull <- mutate(alcs, probability = probabilities)
+# Calculate a logical high use value based on probabilites.
+alcsfull <- mutate(alcsfull, prediction = probability > 0.5)
+Training_error_full<-loss_func(class = alcsfull$high_use, alcsfull$probability)
+
+probabilities<-predict(mAIC,type="response")
+predictions<-probabilities >0.5
+# Add the probabilities
+alcsAIC <- mutate(alcs, probability = probabilities)
+# Calculate a logical high use value based on probabilites.
+alcsAIC <- mutate(alcsAIC, prediction = probability > 0.5)
+Training_error_AIC<-loss_func(class = alcsAIC$high_use, alcsAIC$probability)
+
+probabilities<-predict(mbest,type="response")
+predictions<-probabilities >0.5
+# Add the probabilities
+alcsbest <- mutate(alcs, probability = probabilities)
+# Calculate a logical high use value based on probabilites.
+alcsbest <- mutate(alcsbest, prediction = probability > 0.5)
+Training_error_best<-loss_func(class = alcsbest$high_use, alcsbest$probability)
+
+
+hu <- as.data.frame(prop.table(table(alcs$high_use)))
+predfull <- as.data.frame(prop.table(table(alcsfull$prediction)))
+predAIC <- as.data.frame(prop.table(table(alcsAIC$prediction)))
+predbest <- as.data.frame(prop.table(table(alcsbest$prediction)))
+
+ppobs <- ggplot(hu, aes(Var1, Freq)) + geom_col(aes(fill = Var1)) + scale_y_continuous(limits = 0:1) + ylab('frequency') + xlab('Observed ') + theme(legend.position = 'none')+
+scale_fill_manual(values=c("lightblue","darkred"))+
+ theme(
+plot.title = element_text(color="green", size=14, face="bold.italic"),
+axis.title.x = element_text(color="green", size=8, face="bold"),
+axis.title.y = element_text(color="#993333", size=14, face="bold")
+)
+
+ppfull <- ggplot(predfull, aes(Var1, Freq)) + geom_col(aes(fill = Var1)) + scale_y_continuous(limits = 0:1) + ylab('frequency') + xlab('Full model') + theme(legend.position = 'none')+
+scale_fill_manual(values=c("lightblue","red"))+
+ theme(
+plot.title = element_text(color="red", size=14, face="bold.italic"),
+axis.title.x = element_text(color="red", size=8, face="bold"),
+axis.title.y = element_text(color="#993333", size=14, face="bold")
+)
+
+ppAIC <- ggplot(predAIC, aes(Var1, Freq)) + geom_col(aes(fill = Var1)) + scale_y_continuous(limits = 0:1) + ylab('frequency') + xlab('BestAIC model ') + theme(legend.position = 'none')+
+scale_fill_manual(values=c("lightblue","red"))+
+ theme(
+plot.title = element_text(color="red", size=14, face="bold.italic"),
+axis.title.x = element_text(color="red", size=8, face="bold"),
+axis.title.y = element_text(color="#993333", size=14, face="bold")
+)
+
+ppbest<- ggplot(predbest, aes(Var1, Freq)) + geom_col(aes(fill = Var1)) + scale_y_continuous(limits = 0:1) + ylab('frequency') + xlab("Bestglm model") + theme(legend.position = 'none')+
+scale_fill_manual(values=c("lightblue","red"))+
+ theme(
+plot.title = element_text(color="red", size=14, face="bold.italic"),
+axis.title.x = element_text(color="red", size=8, face="bold"),
+axis.title.y = element_text(color="#993333", size=14, face="bold")
+)
+
+multiplot(ppobs, ppfull, ppAIC, ppbest,cols = 2)
+```
+
+```{r}
+
+Test_error_full<-cvfull$delta[1] # Print the average number of wrong predictions.
+
+Test_error_AIC<-cvAIC$delta[1] # Print the average number of wrong predictions.
+
+Test_error_best<-cvbest$delta[1] # Print the average number of wrong predictions.
+
+Training_error_full
+Test_error_full
+Training_error_AIC
+Test_error_AIC
+Training_error_best
+Test_error_best
+
+```
+Training error | Test error| 
+--- | --- | --- | 
+**<span style="color:orange">full</span>**| 0.2094241 | 0.2329843| 
+**<span style="color:green">AIC</span>**| 0.2172775 | 0.2225131 | 
+**<span style="color:blue">best</span>**| 0.2041885 | **<span style="color:red">0.2198953</span>** | 
+
+
+
+The last model uses best subsets approach aiming to find out the best fit model from all possible subset models. It has only four predictors: sex, absences, family relationships and going out with friends. Using cross-validation it yield a test error of just below 22%, i.e. predicting almost 78% right.
+
+The results of the final model as odds ratios with confidence intervals:
+summary(mbest)
+
+```{r include=FALSE, cache=FALSE}
+OR.vector <- exp(mbest$coef)
+CI.vector <- exp(confint(mbest))
+p.values <- summary(mbest)$coefficients[, 4]
+```
+
+```{r, results='asis'}
+stargazer(mbest, coef = list(OR.vector), ci = T, 
+          ci.custom = list(CI.vector), p = list(p.values), 
+          single.row = T, type = "html",
+          title="Variables related to alcohol consumption",
+          covariate.labels=c("Gender","School absences","Family relationships","Going out with friends"),
+          dep.var.caption = "Model with the lowest testing error",
+          dep.var.labels = "Dependent variable:More than average alcohol usage" )
+
+```
 
 
 Ref. Fabio Pagnotta's and Hossain Mohammad Amran's Using Data Mining To Predict Secondary School Student Alcohol Consumption (2008), published by Department of Computer Science of the University of Camerino
