@@ -319,16 +319,16 @@ cv$delta[1] # Print the average number of wrong predictions.
 
 A ten-fold cross-validation shows that on average approximately 26% of the observations are missclassified under our model with three explanatory variables: sex, famrel and absencees. The average number of wrong predictions in the cross-validation is thus about the same as in the DataCamp exercise (26%). 
 
-However, if the goal of a study like this would be to identify, and thereafter to implement measures to control risk factors for high alcohol usage we would not succeed very well. It seems that the model is still missing relevant risk factors. Thus, I will try to improve the model by including another variable, namely <span style="color:orange">going out with friends</span>, in the model.
+However, if the goal of a study like this would be to identify, and thereafter to implement measures to control risk factors for high alcohol usage we would not succeed very well. It seems that the model is still missing relevant risk factors. Thus, I will try to improve the model by including another variable, namely <span style="color:orange">age</span>, in the model.
 
 ```{r}
-mbetter<-glm(high_use~famrel+absences+sex+goout,family=binomial,data=alc)
+mbetter<-glm(high_use~famrel+absences+sex+age,family=binomial,data=alc)
 #Errors computed and stored
 cvbetter <- cv.glm(data = alc, cost = loss_func, glmfit = mbetter, K = 10)
 cvbetter$delta[1] # Print the average number of wrong predictions.
 ```
 
-Adding <span style="color:orange">going out with friends</span> to the model indeed improves the performance yielding a reasonably lower testing error.
+Adding <span style="color:orange">age</span> to the model hardly improves the performance yielding just a little bit lower testing error.
 
 ### Further cross validation and model comparisons
 
