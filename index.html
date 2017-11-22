@@ -650,7 +650,8 @@ loss_func(class = alc_study$high_use, alc_study$probability)#Training error of t
 <h3>Cross validation</h3>
 <p>Cross-validation tests the model on unseen data, i.e. data not used for generating the model. The lower the value the more accurate the model. Cross-validation can also be used to compare models.</p>
 <pre class="r"><code>#Errors computed and stored
-cv &lt;- cv.glm(data = alc_study, cost = loss_func, glmfit = m2, K = 10)</code></pre>
+cv &lt;- cv.glm(data = alc_study, cost = loss_func, glmfit = m2, K = 10)
+testerror&lt;-cv$delta[1]</code></pre>
 <p>A ten-fold cross-validation shows that on average approximately 26% of the observations are missclassified under our model with three explanatory variables: sex, famrel and absencees. The average number of wrong predictions in the cross-validation is thus about the same as in the DataCamp exercise (26%).</p>
 <p>However, if the goal of a study like this would be to identify, and thereafter to implement measures to control risk factors for high alcohol usage we would not succeed very well. It seems that the model is still missing relevant risk factors. Thus, I will try to improve the model by including another variable, namely <span style="color:orange">age</span>, in the model.</p>
 <pre class="r"><code>mbetter&lt;-glm(high_use~famrel+absences+sex+age,family=binomial,data=alc)
@@ -670,12 +671,12 @@ full&lt;-glm(high_use~.,family=binomial,data=alcs)
 #Errors computed and stored
 cvfull &lt;- cv.glm(data = alcs, cost = loss_func, glmfit = full, K = 10)
 cvfull$delta[1] # Print the average number of wrong predictions.</code></pre>
-<pre><code>## [1] 0.2356021</code></pre>
+<pre><code>## [1] 0.2382199</code></pre>
 <p>The full model based on this data set still has a reasonably high prediction error.</p>
 </div>
 <div id="model-reduction" class="section level4">
 <h4>Model reduction</h4>
-<p>I choose not to do compare model performance solely based on the number of variables, but rather based on the selection methods. To make a purposeful selection and model comparisons firstly stepAIC() and thereafter bestglm() are used. More information about the selection methods can be found in an article <a href="%22https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4842399/%22">here</a>.</p>
+<p>I choose not to do compare model performance solely based on the number of variables, but rather based on the selection methods. To make a purposeful selection and model comparisons firstly stepAIC() and thereafter bestglm() are used. More information about the selection methods can be found in an article <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4842399/">here</a>.</p>
 <pre class="r"><code>library(leaps)
 library(MASS)
 library(bestglm)

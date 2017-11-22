@@ -314,6 +314,7 @@ Cross-validation tests the model on unseen data, i.e. data not used for generati
 ```{r}
 #Errors computed and stored
 cv <- cv.glm(data = alc_study, cost = loss_func, glmfit = m2, K = 10)
+testerror<-cv$delta[1]
 ```
 
 A ten-fold cross-validation shows that on average approximately 26% of the observations are missclassified under our model with three explanatory variables: sex, famrel and absencees. The average number of wrong predictions in the cross-validation is thus about the same as in the DataCamp exercise (26%). 
@@ -347,7 +348,7 @@ The full model based on this data set still has a reasonably high prediction err
 
 #### Model reduction
 
-I choose not to do compare model performance solely based on the number of variables, but rather based on the selection methods. To make a purposeful selection and model comparisons firstly stepAIC() and thereafter bestglm() are used. More information about the selection methods can be found in an article [here]("https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4842399/").
+I choose not to do compare model performance solely based on the number of variables, but rather based on the selection methods. To make a purposeful selection and model comparisons firstly stepAIC() and thereafter bestglm() are used. More information about the selection methods can be found in an article [here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4842399/).
 
 ```{r}
 library(leaps)
