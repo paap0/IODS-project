@@ -121,7 +121,7 @@ The purpose is to investigate the relationship between *high alcohol consumption
 --- | --- | --- | --- |---
 **<span style="color:red">SEX</span>**| Gender | factorial | binary | F-female/M-male|
 **<span style="color:green">ABSENCES</span>**| Number of school abscenses | integer | 0-93 |hours|
-**<span style="color:blue">FAMREL</span>**| Quality of family relationships | integer | 1-5 |Very bad - Very good|
+**<span style="color:blue">FAMREL</span>**| Quality of family relationships | integer | 1-5 |Very bad - Excellent|
 **<span style="color:orange">HEALTH</span>**| Current health status | integer | 1-5 |Very bad - Very good|
 
 
@@ -139,7 +139,7 @@ Specifically stated hypotheses are: **<span style="color:red">*Males are more pr
 
 
 Let´s take the first look graphically: distributions and correlations as well as suitable bar and box plots grouped by *high alcohol usage* to better understand the relationship between the chosen variables and the outcome. 
-To have multiple figures on the same plot I use the great [multiplot]("http://www.peterhaschke.com/r/2013/04/24/MultiPlot.html") script.
+To have multiple figures on the same plot I use the great [multiplot](http://www.peterhaschke.com/r/2013/04/24/MultiPlot.html) script.
 
 
 ```{r}
@@ -241,18 +241,18 @@ m2<-glm(high_use~sex+absences+famrel,data=alc_study,family="binomial")
 summary(m2)
 ```
 
-
 Now all of the variables in the model are significant at the 5 % level.  
 
 ```{r include=FALSE, cache=FALSE}
-result<-cbind(exp(coef(m2)),exp(confint(m2)))
+Oddsratios_Confint<-cbind(exp(coef(m2)),exp(confint(m2)))
 ```
 ```{r}
-result
+Oddsratios_Confint
 ```
-The significant odds ratios reveal that males have 2.8 (1.7 - 4.5) times higher odds to be high consumers of alcohol than females and that with increasing absences the person is more likely to be a high consumer. On the contrary, the better the family relationships the less likely the person is to be a high consumer of alcohol.
 
-More specifically, to explain and interpret both the summary and the table with odds ratios and condidence intervals I take the coefficient for absences, which is 0.09352 as an example. It can be interpreted as the expected change in log odds for a one-unit increase in the number of absences. The odds ratio can be calculated by exponentiating this value to get 1.0980288 which means that we expect to see about 10% increase in the odds of being in a high alcohol user, for a one-unit increase in absences.
+The significant odds ratios reveal that the factorial variable (male) denoting the difference between the genders refers to a 2.8 (1.7 - 4.5) times higher odds for males to be high consumers of alcohol than females. The coefficient for males would actually be the intercept plus the estimate for gender. With regard to continuous variables the interpretation differs: increasing absences the person is more likely to be a high consumer. And on the contrary, the better the family relationships the less likely the person is to be a high consumer of alcohol.
+
+More specifically, to explain and interpret both the summary and the table with odds ratios and condidence intervals I take a more detailed look at the coefficient for absences, which is 0.09352. It can be interpreted as the expected change in log odds for a one-unit increase in the number of absences. The odds ratio can be calculated by exponentiating this value to get 1.0980288 which means that we expect to see about 10% increase in the odds of being in a high alcohol user, for a one-unit increase in absences.
 
 
 ### Predictive power
