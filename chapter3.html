@@ -149,7 +149,7 @@ $(document).ready(function () {
 <div id="introduction" class="section level3">
 <h3>Introduction</h3>
 <p>Data including grades, demographic, social and school related features were collected in two Portuguese schools using school reports and questionnaires and stored as two separate datasets regarding performance in distinct subjects, namely Mathematics and Portuguese.</p>
-<p>The original data of the analysis in this exercise are freely available as a <a href="https://archive.ics.uci.edu/ml/machine-learning-databases/00320/">zip file</a>. Additional <a href="https://archive.ics.uci.edu/ml/datasets/Student+Performance">metadata</a> information describes basic characteristics of the data sets. For the purporse of this particular exercise they needed to be joined and edited according to <a href="https://github.com/paap0/IODS-project/blob/master/data/create_alc.R">this R script</a>. The variables not used for joining the two data were combined by averaging them. An additional variable <em>high_use</em> was created by taking the average of the sum of alcohol consumption during weekdays and weekends, which was thereafter further modified to yield a logical TRUE or FALSE <em>high_use</em> variable. A treshold value for higher than average alcohol consumption was chosen to be more than 2 weekly proportions.</p>
+<p>The original data of the analysis in this exercise are freely available as a <a href="https://archive.ics.uci.edu/ml/machine-learning-databases/00320/">zip file</a>. Additional <a href="https://archive.ics.uci.edu/ml/datasets/Student+Performance">metadata</a> information describes basic characteristics of the data sets. For the purpose of this particular exercise they needed to be joined and edited according to <a href="https://github.com/paap0/IODS-project/blob/master/data/create_alc.R">this R script</a>. The variables not used for joining the two data sets were combined by averaging them. An additional variable <em>high_use</em> was created by taking the average of the sum of alcohol consumption during weekdays and weekends, which was thereafter further modified to yield a logical TRUE or FALSE <em>high_use</em> variable. A treshold value for higher than average alcohol consumption was chosen to be more than 2 weekly proportions.</p>
 </div>
 <div id="preliminary-information-and-descriptive-statistics" class="section level3">
 <h3>Preliminary information and descriptive statistics</h3>
@@ -251,7 +251,7 @@ colnames(alc)</code></pre>
 </div>
 <div id="hypotheses" class="section level4">
 <h4>Hypotheses</h4>
-<p>Briefly, I assume that men drink more, more school absences are associated with drinking habits, students with worse family relationships drink more, and better health is associated with less alcohol consumption. Specifically stated hypotheses are: <strong><span style="color:red"><em>Males are more prone to belong to high users of alcohol defined by more than 2 proportions a week than females</em></span> <span style="color:green"><em>Students with more school absencies drink more than those attending school more frequently.</em></span> <span style="color:blue"><em>Students with very good family relationships consume less alcohol than do students with bad family relationships.</em></span> <span style="color:orange"><em>Very good health status is protective for high alcohol consumption (more than 2 weekly proportions) compared to very bad health status.</em></span></strong></p>
+<p>Briefly, I assume that men drink more, more school absences are associated with drinking habits, students with worse family relationships drink more, and better health is associated with less alcohol consumption. Specifically stated hypotheses are: <strong><span style="color:red"><em>Males are more prone to belonging to high users of alcohol defined by more than 2 proportions a week than females</em></span> <span style="color:green"><em>Students with more school absencies drink more than those attending school more frequently.</em></span> <span style="color:blue"><em>Students with very good family relationships consume less alcohol than do students with bad family relationships.</em></span> <span style="color:orange"><em>Very good health status is protective for high alcohol consumption (more than 2 weekly proportions) compared to very bad health status.</em></span></strong></p>
 </div>
 <div id="graphical-overviews" class="section level4">
 <h4>Graphical overviews</h4>
@@ -304,13 +304,13 @@ CreateTableOne(vars=c(&quot;sex&quot;,&quot;absences&quot;,&quot;famrel&quot;,&q
 ##   absences (mean (sd)) 3.71 (4.45)  6.37 (6.99)  &lt;0.001     
 ##   famrel (mean (sd))   4.00 (0.89)  3.78 (0.93)   0.027     
 ##   health (mean (sd))   3.52 (1.40)  3.70 (1.40)   0.242</code></pre>
-<p>There are proportionally more male high users than there are females. Family relationships on average are better for the ones not using a lot of alcohol (4.00 vs 3.78). However, there are no differencies in the median values (4.00 vs 4.00). Both the mean (6.37) and median (4.00) values for absences are higher in the higher usage group than in the group of students consuming less than average amount (3.00,3.71). There are also quite a few outliers in both groups. Surprisingly, the high-user group members have higher current health scores (mean=3.70, median=4.00) than do the non-high-user ones (3.52,4.00). Yet, the differences are small.</p>
+<p>There are proportionally more male high users than there are females. Family relationships on average are better for the ones not using a lot of alcohol (4.00 vs 3.78). However, there are no differencies in the median values (4.00 vs 4.00). Both the mean (6.37) and median (4.00) values for absences are higher in the higher usage group than in the group of students consuming less than average amount (3.71,3.00). There are also quite a few outliers in both groups. Surprisingly, the high-user group members have higher current health scores (mean=3.70, median=4.00) than do the non-high-user ones (3.52,4.00). Yet, the differences are small.</p>
 <p>Thus, based on both the graphical and numerical overviews it seems that all of the variables except health are at least to some extent associated with the level of alcohol consumption as I hypotesized. Additionally, it has been investigated that there are no relevant correlations between the chosen variables. To further explore the associations a logistic regression analysis is carried out.</p>
 </div>
 </div>
 <div id="fitting-the-model" class="section level3">
 <h3>Fitting the model</h3>
-<p>A logistic regression model with four explanatory variables selected based on the preliminary interest is fitted to identify the ones related to <em>higher than average student alcohol consumption</em>. Logistic regression is basic approach for binary outcomes and its results provide probability estimates of the event happening.</p>
+<p>A logistic regression model with four explanatory variables selected based on the preliminary interest is fitted to identify the ones related to <em>higher than average student alcohol consumption</em>. Logistic regression is basic approach for binary outcomes and its results provide probability estimates of the event happening (P(Y=1)).</p>
 <pre class="r"><code>#First model with four explanatory variables
 m1&lt;-glm(high_use~sex+absences+famrel+health,data=alc_study,family=&quot;binomial&quot;)
 summary(m1)</code></pre>
@@ -340,7 +340,7 @@ summary(m1)</code></pre>
 ## AIC: 433.95
 ## 
 ## Number of Fisher Scoring iterations: 4</code></pre>
-<p>The summary of the model confirm what could already be suspected based on the plot and numerical grouped summary. The variables sex, absences and famrel are significant at the 5 % level. The effect of health is not even borderline significant (p=0.3426). From the estimates it can also be captured that the correlation between family relationships and <em>high use</em> is negative and the correlation between school absences and <em>high use</em> is positive. Furthermore, being a male positively correlates with the outcome, i.e. increases the risk of being a high consumer of alcohol.</p>
+<p>The summary of the model confirm what could already be suspected based on the plots and numerical grouped summary. The variables sex, absences and famrel are significant at the 5 % level. The effect of health is not even borderline significant (p=0.3426). From the estimates it can also be captured that the correlation between family relationships and <em>high_use</em> is negative and the correlation between school absences and <em>high_use</em> is positive. Furthermore, being a male positively correlates with the outcome, i.e. increases the risk of being a high consumer of alcohol.</p>
 <div id="odds-odds-ratio-and-confidence-intervals" class="section level4">
 <h4>Odds, odds ratio and confidence intervals</h4>
 <p>To better understand the odds ratio which is used in logistic regression to quantify the relationship between an explanatory factor and the target variabe the term <em>odds</em> should be clarified. It is the probability divided by the opposite of that probability. Logically, the ratio of two odds is called <em>the odds ratio</em>.Odds higher than 1 mean that the factor is positively associated with event happening, and odds less than 1 refers to a negative, or, if the event is unwanted (e.g. death), a protective effect. To further complicate the matter, based on the primary equation, in the logistic regression model the target variable is not purely odds, but the log of odds. Thus, in the following table, firstly the odds are obtained by exponentiating the summary estimates and, secondly the profile likelihood-based confidence intervals are calculated by using the confint command from MASS package:</p>
@@ -391,13 +391,13 @@ summary(m2)</code></pre>
 ## sexM        2.7976292 1.7476499 4.5467291
 ## absences    1.0980228 1.0524564 1.1504519
 ## famrel      0.7475910 0.5811204 0.9595347</code></pre>
-<p>The significant odds ratios reveal that the factorial variable (male) denoting the difference between the genders refers to a 2.8 (1.7 - 4.5) times higher odds for males to be high consumers of alcohol than females. The coefficient for males would actually be the intercept plus the estimate for gender. With regard to continuous variables the interpretation differs: increasing absences the person is more likely to be a high consumer. And on the contrary, the better the family relationships the less likely the person is to be a high consumer of alcohol.</p>
-<p>More specifically, to explain and interpret both the summary and the table with odds ratios and condidence intervals I take a more detailed look at the coefficient for absences, which is 0.09352. It can be interpreted as the expected change in log odds for a one-unit increase in the number of absences. The odds ratio can be calculated by exponentiating this value to get 1.0980288 which means that we expect to see about 10% increase in the odds of being in a high alcohol user, for a one-unit increase in absences.</p>
+<p>The significant odds ratios reveal that the factorial variable (male) denoting the difference between the genders refers to a 2.8 (1.7 - 4.5) times higher odds for males to be high consumers of alcohol than females. The coefficient for males would actually be the intercept plus the estimate. with increasing absences the person is more likely to be a high alcohol consumer. And on the contrary, the better the family relationships the less likely the person is to be a high consumer of alcohol.</p>
+<p>More specifically, to explain and interpret both the summary and the table with odds ratios and confidence intervals I take a more detailed look at the coefficient for absences, which is 0.09352. It can be interpreted as the expected change in log odds for a one-unit increase in the number of absences. The odds ratio can be calculated by exponentiating this value to get 1.0980288 which means that we expect to see about 10% increase in the odds of being in a high alcohol user, for a one-unit increase in absences.</p>
 </div>
 </div>
 <div id="predictive-power" class="section level3">
 <h3>Predictive power</h3>
-<p>The second model will be used to explore the predictive power:</p>
+<p>The second model will be used to explore the predictive power of the model:</p>
 <pre class="r"><code>probabilities&lt;-predict(m2,type=&quot;response&quot;)
 predictions&lt;-probabilities &gt;0.5
 # Add the probabilities
@@ -458,25 +458,25 @@ testerror&lt;-cv$delta[1]</code></pre>
 #Errors computed and stored
 cvbetter &lt;- cv.glm(data = alc, cost = loss_func, glmfit = mbetter, K = 10)
 cvbetter$delta[1] # Print the average number of wrong predictions.</code></pre>
-<pre><code>## [1] 0.2460733</code></pre>
+<pre><code>## [1] 0.2565445</code></pre>
 <p>Adding <span style="color:orange">age</span> to the model hardly improves the performance yielding just a little bit lower testing error.</p>
 </div>
 <div id="further-cross-validation-and-model-comparisons" class="section level3">
 <h3>Further cross validation and model comparisons</h3>
 <div id="model-with-12-variables" class="section level4">
 <h4>Model with 12 variables</h4>
-<p>A data set with 11 integer and one factorial variable (gender) is used to improve the predictive accuracy.</p>
+<p>A data set with 11 integer and one factorial variable (gender) is used as a whole to improve the predictive accuracy.</p>
 <pre class="r"><code>alcs&lt;-alc[c(&quot;age&quot;,&quot;Medu&quot;,&quot;Fedu&quot;,&quot;failures&quot;,&quot;G3&quot;,&quot;sex&quot;,&quot;absences&quot;,&quot;famrel&quot;,&quot;health&quot;,&quot;goout&quot;,&quot;studytime&quot;,&quot;freetime&quot;,&quot;high_use&quot;)]
 full&lt;-glm(high_use~.,family=binomial,data=alcs)
 #Errors computed and stored
 cvfull &lt;- cv.glm(data = alcs, cost = loss_func, glmfit = full, K = 10)
 cvfull$delta[1] # Print the average number of wrong predictions.</code></pre>
-<pre><code>## [1] 0.2251309</code></pre>
+<pre><code>## [1] 0.2408377</code></pre>
 <p>The full model based on this data set still has a reasonably high prediction error.</p>
 </div>
 <div id="model-reduction" class="section level4">
 <h4>Model reduction</h4>
-<p>I choose not to do compare model performance solely based on the number of variables, but rather based on the selection methods. To make a purposeful selection and model comparisons firstly stepAIC() and thereafter bestglm() are used. More information about the selection methods can be found in an article <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4842399/">here</a>.</p>
+<p>I choose not to compare model performance solely based on the number of variables, but rather based on the selection methods. To make a purposeful selection and model comparisons firstly stepAIC() and thereafter bestglm() are used. More information about the selection methods can be found in an article <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4842399/">here</a>.</p>
 <pre class="r"><code>library(leaps)
 library(MASS)
 library(bestglm)
@@ -513,7 +513,7 @@ scope$anova</code></pre>
 ## absences     0.08167686 0.02199598  3.713263 2.046039e-04
 ## famrel      -0.39378406 0.14034903 -2.805748 5.019988e-03
 ## goout        0.76761101 0.12316480  6.232389 4.593740e-10</code></pre>
-<p>Based on the outputs of the two approaches best models are fitted. The former (AIC) one includes gender, absences, family relationships, going out with friends and study time and the latter (best) gender, absences, family relationships and going out with friends.</p>
+<p>Based on the outputs of the two approaches best models are fitted. The former (AIC) one includes gender, absences, family relationships, going out with friends and study time and the latter (bestglm) gender, absences, family relationships and going out with friends.</p>
 <pre class="r"><code>hu &lt;- as.data.frame(prop.table(table(alcs$high_use)))
 predfull &lt;- as.data.frame(prop.table(table(alcsfull$prediction)))
 predAIC &lt;- as.data.frame(prop.table(table(alcsAIC$prediction)))
@@ -582,18 +582,31 @@ multiplot(ppobs, ppfull, ppAIC, ppbest,cols = 4)</code></pre>
 </div>
 <div id="final-model-with-the-lowest-testing-error" class="section level4">
 <h4>Final model with the lowest testing error</h4>
-<p>The last model uses best subsets approach aiming to find out the best fit model from all possible subset models. It has <em>only four</em> explanatory variables: sex, absences, family relationships and going out with friends. Using cross-validation it yield a test error of just below 22%, i.e. predicting almost 78% right.</p>
+<p>The last model uses best subsets approach aiming to find out the best fit model from all possible subset models. It has <em>only four</em> explanatory variables: sex, absences, family relationships and going out with friends. Using cross-validation it yield a test error of just below 22%, i.e. predicting almost 78% right. However, there are still 14 false negatives and 64 false positives.</p>
+<pre class="r"><code>probabilities&lt;-predict(mbest,type=&quot;response&quot;)
+predictions&lt;-probabilities &gt;0.5
+# Add the probabilities
+alcbest &lt;- mutate(alcs, probability = probabilities)
+# Calculate a logical high use value based on probabilites.
+alcbest &lt;- mutate(alcbest, prediction = probability &gt; 0.5)
+table(high_use=alcbest$high_use,prediction=predictions) %&gt;% addmargins %&gt;% round(digits=2)</code></pre>
+<pre><code>##         prediction
+## high_use FALSE TRUE Sum
+##    FALSE   254   14 268
+##    TRUE     64   50 114
+##    Sum     318   64 382</code></pre>
 <p>To conclude, the results of the final model as odds ratios with confidence intervals:</p>
 <pre class="r"><code>stargazer(mbest, coef = list(OR.vector), ci = T, 
           ci.custom = list(CI.vector), p = list(p.values), 
-          single.row = T, type = &quot;html&quot;,
-          title=&quot;Variables related to alcohol consumption&quot;,
-          covariate.labels=c(&quot;Gender&quot;,&quot;School absences&quot;,&quot;Family relationships&quot;,&quot;Going out with friends&quot;),
+          single.row = T,align=TRUE, type = &quot;html&quot;,
+          
+          title=&quot;Logistic regression model: Variables related to alcohol consumption&quot;,column.labels=c(&quot;odds ratio(confint)&quot;),
+          covariate.labels=c(&quot;Gender(M)&quot;,&quot;School absences&quot;,&quot;Family relationships&quot;,&quot;Going out with friends&quot;),
           dep.var.caption = &quot;Model with the lowest testing error&quot;,
           dep.var.labels = &quot;Dependent variable:More than average alcohol usage&quot; )</code></pre>
 <table style="text-align:center">
 <caption>
-<strong>Variables related to alcohol consumption</strong>
+<strong>Logistic regression model: Variables related to alcohol consumption</strong>
 </caption>
 <tr>
 <td colspan="2" style="border-bottom: 1px solid black">
@@ -620,12 +633,19 @@ Dependent variable:More than average alcohol usage
 </td>
 </tr>
 <tr>
+<td style="text-align:left">
+</td>
+<td>
+odds ratio(confint)
+</td>
+</tr>
+<tr>
 <td colspan="2" style="border-bottom: 1px solid black">
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
-Gender
+Gender(M)
 </td>
 <td>
 2.752<sup>***</sup> (1.668, 4.613)
