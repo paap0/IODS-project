@@ -314,7 +314,6 @@ Cross-validation tests the model on unseen data, i.e. data not used for generati
 ```{r}
 #Errors computed and stored
 cv <- cv.glm(data = alc_study, cost = loss_func, glmfit = m2, K = 10)
-cv$delta[1] # Print the average number of wrong predictions.
 ```
 
 A ten-fold cross-validation shows that on average approximately 26% of the observations are missclassified under our model with three explanatory variables: sex, famrel and absencees. The average number of wrong predictions in the cross-validation is thus about the same as in the DataCamp exercise (26%). 
@@ -437,7 +436,7 @@ axis.title.x = element_text(color="blue", size=8, face="bold"),
 axis.title.y = element_text(color="#993333", size=14, face="bold")
 )
 
-multiplot(ppobs, ppfull, ppAIC, ppbest,cols = 2)
+multiplot(ppobs, ppfull, ppAIC, ppbest,cols = 4)
 ```
 
 ```{r include=FALSE, cache=FALSE}
@@ -463,9 +462,9 @@ Model |Training error | Test error|
 
 #### Final model with the lowest testing error
 
-The last model uses best subsets approach aiming to find out the best fit model from all possible subset models. It has only four predictors: sex, absences, family relationships and going out with friends. Using cross-validation it yield a test error of just below 22%, i.e. predicting almost 78% right.
+The last model uses best subsets approach aiming to find out the best fit model from all possible subset models. It has *only four* explanatory variables: sex, absences, family relationships and going out with friends. Using cross-validation it yield a test error of just below 22%, i.e. predicting almost 78% right.
 
-To conclude, the results of the final model as odds ratios with confidence intervals and summary statistis:
+To conclude, the results of the final model as odds ratios with confidence intervals:
 
 ```{r include=FALSE, cache=FALSE}
 OR.vector <- exp(mbest$coef)
