@@ -14,6 +14,7 @@ library(stringr)
 library(stargazer)
 
 #Set working directory
+
 setwd("~/GitHub/IODS-project/data")
 
 
@@ -24,6 +25,7 @@ gii <- read.csv("http://s3.amazonaws.com/assets.datacamp.com/production/course_2
 
 
 #2.Datasets explored and summaries created
+
 str(hd)
 str(gii)
 sapply(list(hd,gii), dim)
@@ -55,6 +57,7 @@ glimpse(human) #195 observations and 19 variables. Correct!
 write.csv(human, file = "human.csv", row.names = FALSE)
 
 #4.Checking that it indeed is saved and the structure is as it should
+
 humantest<-read.csv(file="human.csv", header=TRUE)
 dim(humantest)#should be 195 obs and 9 variables correct!
 head(humantest)
