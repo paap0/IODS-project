@@ -127,8 +127,11 @@ data("Boston")
 glimpse(Boston)
 ```
 
+### Summaries and plots
 
+#### Basic variable characteristics
 
+The descriptive summary includes values of skewness (a measure of the symmetry in a distribution) and kurtosis (measuring the [*"tail-heaviness"*](https://www.spcforexcel.com/knowledge/basic-statistics/are-skewness-and-kurtosis-useful-statistics) of the distribution) and already shows the separating quantile values for crime to be further used later.
 ```{r message=FALSE, warning=FALSE}
 tab1<-CreateTableOne(vars=c("crim","zn", "indus","chas","nox" ,"rm"   
  ,"age","dis" ,"rad" , "tax" ,"ptratio", "black"  
@@ -137,6 +140,7 @@ summary(tab1)
 ```
 
 
+#### Distribution plots
 
 To get a better idea of the variables and their distributions some plots are generated.
 
@@ -169,10 +173,11 @@ Boston %>%
 
 
 
-Due to variable characteristics (percents, proportions or function based values) it is understandable that some of them have rather uneven/ skewed distributions: e.g. proportion of black people (scaled proportion of blacks), indus (proportion of non-retail business acres), age (proportion of owner-occupied units built prior to 1940), proportion of land zond for very large lots (zn) and lstat (lower status of the population (percent)). 
-On the contrary, dwelling size referring to the number of rooms (rm) is normally distributed and median value of owner-occupied homes can also be judged to be.
-Charles River dummy variable (Chas) is binary (1/0) referring to the river crossing the area and the radial highways accessibility (rad) is an interval scaled index.
+Due to variable characteristics (percents, proportions or function based values) it is understandable that most of them have rather uneven/ skewed distributions: e.g. proportion of black people (scaled proportion of blacks), indus (proportion of non-retail business acres), age (proportion of owner-occupied units built prior to 1940), proportion of land zond for very large lots (zn) and lstat (lower status of the population (percent)). 
+On the contrary, dwelling size referring to the number of rooms (rm) is normally distributed and median value of owner-occupied homes (medv) can also be judged to be.
+Charles River dummy variable (chas) is binary (1/0) referring to the river crossing the area and the radial highways accessibility (rad) is an interval scaled index.
 
+#### Crime rate per capita
 ```{r message=FALSE, warning=FALSE, fig.width=6,fig.height=5, fig.align="center"}
 #to get a better idea about variable crim it is plotted separately
 plot(Boston$crim, col="red",pch=8, main="Crime rate per capita")
@@ -185,7 +190,9 @@ ggplot(Boston, aes(x = crim)) +
   ggtitle("Crime rate per capita")+ theme(legend.position="none")
 
 ```
-We are especially interested in the variable *crime*. Crime rate varies a lot between areas ranging from min=0.01 to max=88.98. Quite a few high outlier values among the 506 observations as can be seen in the plot contribute to the low  average value of 3.61 and median value of 0.26. The distribution is strongly skewed to the left.
+We are especially interested in the variable *crim*. Thus, it is visualized separately. Crime rate varies a lot between areas ranging from min=0.01 to max=88.98. Quite a few high outlier values among the 506 observations as can be seen in the plot contribute to the low  average value of 3.61 and median value of 0.26. The distribution is strongly skewed to the left.
+
+#### Variable correlations
 
 
 To explore the relations between the variables of the data set pairwise scatter plots and a correlation plots are printed.
@@ -196,7 +203,7 @@ pairs(Boston,lower.panel = NULL)
 ```
 
 
-To me the scatter plots are not that informative, though. Thus, I will try another approach where the correlation chart presents simultanously both the direction (color) and the magnitude (size of the circle) as well as the values of the correlation. 
+To me these scatter plots are not that informative, though. Thus, I will try another approach where the correlation chart presents simultanously both the direction (color) and the magnitude (size of the circle) as well as the values of the correlation. 
 ```{r {r fig2, fig.height = 8, fig.width = 7, fig.align = "center"}
 #a more visual correlation matrix
 cor_matrix<-cor(Boston) %>% round(2)
@@ -254,6 +261,7 @@ corstars(Boston,result="html")
 ```
 
 
+&nbsp;
 
 From all the information above it can be captured that there are several relevant correlations between the variables. Strong negative correlations exist between weighted mean distances to five Boston employment centres (dis) and proportion of non-retail business acres per town (indus) / nitrogen oxide (nox) / and older properties (age). Not surprisingly, a strong negative correlation between lower status of the population (percent) and median home value (medv) is seen.
 Strong positive correlations especially between index of accessibility to radial highways (rad) and full-value property-tax rate per \$10,000 (tax) / proportion of non-retail business acres per town (indus) exist. Proportion of non-retail business acres per town (indus) is further positively correlated with nitrogen oxide (nox) and full-value property tax-rate (tax). 
@@ -364,7 +372,7 @@ p1<-plot(lda.fit, dimen = 2, col = classes, pch = classes)
 ```
 
 
-```{r  message=FALSE, warning=FALSE}
+```{r p2,fig.height = 5, fig.width = 6, fig.align = "center", message=FALSE, warning=FALSE}
 #(bi)plot
 p2<-plot(lda.fit, dimen = 2, col = classes, pch = classes)
 #arrows 
