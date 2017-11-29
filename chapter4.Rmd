@@ -497,9 +497,9 @@ lda.arrows(lda.fit2, myscale = 2)
 
 
 
-### <span style="color:lightgreen">SUPER-Bonus</span>
+### <span style="color:lightgreen">Super-Bonus</span>
 
-Super-Bonus: Run the code below for the (scaled) train data that you used to fit the LDA. The code creates a matrix product, which is a projection of the data points.
+The given code is ran on the scaled train set. A matrix is created including projections of the data points. 
 
 ```{r}
 model_predictors <- dplyr::select(train, -crime)
@@ -510,16 +510,21 @@ dim(lda.fit$scaling)
 matrix_product <- as.matrix(model_predictors) %*% lda.fit$scaling
 matrix_product <- as.data.frame(matrix_product)
 ```
-Next, install and access the plotly package. Create a 3D plot (Cool!) of the columns of the matrix product by typing the code below.
+
+3D plot without colours is created:
 
 ```{r message=FALSE, warning=FALSE,fig.align="center"}
 library(plotly)
 plot_ly(x = matrix_product$LD1, y = matrix_product$LD2, z = matrix_product$LD3, type= 'scatter3d', mode='markers')
 ```
-        
+
+3D plot is created the categorized crime rate classes defining the colours:
+
 ```{r message=FALSE, warning=FALSE,fig.align="center"}
 plot_ly(x = matrix_product$LD1, y = matrix_product$LD2, z = matrix_product$LD3, type= 'scatter3d', mode='markers', color=train$crim)
 ```
+3D plot is created the last K-mean clusters defining the colours:
+
 ```{r message=FALSE, warning=FALSE,fig.align="center"}
 train$cluster<-km2$cluster[match(rownames(train),rownames(boston_scaled4))]
 plot_ly(x = matrix_product$LD1, y = matrix_product$LD2, z = matrix_product$LD3, type= 'scatter3d', mode='markers', color=as.factor(train$cluster))
