@@ -9,10 +9,10 @@ output:
 
 ---
 
-## **4<sup>th</sup> WEEK**: Clustering
+## **4<sup>th</sup> WEEK**: Clustering and classification
 
 
-Cluster analysis is one of the main tasks of exploratory data mining and is thus the topic of this week's exercise. Clustering techniques identify similar groups or clusters of observations so that members within any segment are *more similar* while data across segments are *different*. However, defining what is meant by that requires a lot of contextual knowledge and creativity.
+Cluster analysis is one of the main tasks of exploratory data mining and is thus the topic of this week's exercise. Clustering techniques identify similar groups or clusters among observations so that members within any segment are *more similar* while data across segments are *different*. However, defining what is meant by that requires often a lot of contextual knowledge and creativity.
 
 
 
@@ -85,7 +85,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
 
 
-The **Boston** data will be used. It can be loaded from the R package MASS.According to the **<span style="background:lightgreen">?Boston</span>**, the data frame has 506 rows (observations) of 14 columns (variables). Briefly, the data report several variables potentially explaining housing values around Boston. Our aim is to classify suburbs from Boston data set into classes based on their characteristics. The variables included are:
+The **Boston** data will be used. It can be loaded from the R package MASS.According to the **<span style="background:lightgreen">?Boston</span>**, the data frame has 506 rows (observations) of 14 columns (variables). Briefly, the data report several variables potentially explaining housing values around Boston. Our aim is to classify the included suburbs from Boston data set into classes based on their characteristics. The variables are:
 
 
 - **<span style="background:lightgreen">crim</span>**: per capita crime rate by town
@@ -126,15 +126,10 @@ Firstly, the data are loaded, glimpsed and thereafter summaries are printed.
 data("Boston")
 glimpse(Boston)
 ```
-```{r include=FALSE, cache=FALSE}
-#one way of printing the summaries
-kable(summary(Boston[,1:7]))
-kable(summary(Boston[,8:14])) 
-```
 
 
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 tab1<-CreateTableOne(vars=c("crim","zn", "indus","chas","nox" ,"rm"   
  ,"age","dis" ,"rad" , "tax" ,"ptratio", "black"  
 ,"lstat" , "medv"), factorVars = c("rad", "chas"),data=Boston)
@@ -184,8 +179,13 @@ plot(Boston$crim, col="red",pch=8, main="Crime rate per capita")
 text(198,59," Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
    0.01    0.08    0.26    3.61    3.68   88.98" )
 ```
+```{r message=FALSE, warning=FALSE, fig.width=6,fig.height=5, fig.align="center"}
+ggplot(Boston, aes(x = crim)) +
+  stat_density(aes(col="red"),position="identity",geom="line",size=2)+
+  ggtitle("Crime rate per capita")+ theme(legend.position="none")
 
-We are especially interested in the variable *crime*. Crime rate varies a lot between areas ranging from min=0.01 to max=88.98. Quite a few high outlier values among the 506 observations as can be seen in the plot contribute to the low  average value of 3.61 and median value of 0.26.
+```
+We are especially interested in the variable *crime*. Crime rate varies a lot between areas ranging from min=0.01 to max=88.98. Quite a few high outlier values among the 506 observations as can be seen in the plot contribute to the low  average value of 3.61 and median value of 0.26. The distribution is strongly skewed to the left.
 
 
 To explore the relations between the variables of the data set pairwise scatter plots and a correlation plots are printed.
@@ -255,14 +255,14 @@ corstars(Boston,result="html")
 
 
 
-From all the information above it can be captured that there are several relevant correlations between the variables. There are strong negative correlations between weighted mean distances to five Boston employment centres (dis) and proportion of non-retail business acres per town (indus) / nitrogen oxide (nox) / and older properties (age). There is also a strong negative correlation between lower status of the population (percent) and median value of owner-occupied homes in \$1000s (medv). 
-There are strong positive correlations especially between index of accessibility to radial highways (rad) and full-value property-tax rate per \$10,000 (tax) / proportion of non-retail business acres per town (indus). Indus is further positively correlated with nitrogen oxide (nox) and full-value property tax-rate (tax). 
-Furthermore, the crime rate is correlated with many of the variables: e.g. negatively with It is negatively correlated with e.g.medv and dis, positively with e.g. housing values and distances to employment centers, and positively rad and tax.
+From all the information above it can be captured that there are several relevant correlations between the variables. Strong negative correlations exist between weighted mean distances to five Boston employment centres (dis) and proportion of non-retail business acres per town (indus) / nitrogen oxide (nox) / and older properties (age). Not surprisingly, a strong negative correlation between lower status of the population (percent) and median home value (medv) is seen.
+Strong positive correlations especially between index of accessibility to radial highways (rad) and full-value property-tax rate per \$10,000 (tax) / proportion of non-retail business acres per town (indus) exist. Proportion of non-retail business acres per town (indus) is further positively correlated with nitrogen oxide (nox) and full-value property tax-rate (tax). 
+Furthermore, one of our main interests, the crime rate is correlated with many of the variables: e.g. negatively with e.g. distance to employment centers (dis) and median home value (medv), positively with e.g. full-value property tax-rate (tax) and access to radial highways (rad). Thus, an increase in crime rate seems to be associated with an increasing highway accessibility index and property tax.
 
 
 ### Scaling the dataset and categorising crime rate
 
-Linear discriminant analysis is a method to find linear combinations to charachterize variable classes. Firstly, the data set needs to be standardized, i.e. all variables fit to normal distribution so that the mean of every variable is zero. Scaling means subtracting the column means from the corresponding columns and dividing the difference with standard deviation:
+Linear discriminant analysis is a method generating linear combinations to charachterize variable classes. To enable the method the data set needs to be standardized, i.e. all variables fit to normal distribution so that the mean of every variable is zero by ubtracting the column means from the corresponding columns and dividing the difference with standard deviation:
 
 $$ scaled(x) = \frac{x-means(x)}{sd(x)} $$
 
@@ -272,7 +272,8 @@ $$ scaled(x) = \frac{x-means(x)}{sd(x)} $$
 boston_scaled <- as.data.frame(scale(Boston))
 ```
 
-```{r, results='asis',fig.align="center", warning=FALSE, message=FALSE}
+
+```{r setup, include=FALSE, fig.align="center"}
 #print out the summaries of the scaled data
 #a nicer way to my opinion to print out the summary statistics
 stargazer(Boston,type="html", title="Boston data (MASS package) summary statistics")
@@ -282,9 +283,9 @@ stargazer(boston_scaled,type="html", title="Boston data summary statistics AFTER
 
 
 
-In comparison to the previous summary, the values have decreased and all mean values are converted to zero and standard deviations to 1.
+In comparison, the values of the latter table have decreased, and all mean values are converted to zero and standard deviations to 1.
 
-In addition to scaling, a categorical variable of the scaled crime rate has to be created. Quantiles are used for this to yield four grouping values: low, medium low, medium high and high crime rates. 
+In addition to scaling, a categorical variable of the scaled crime rate has to be created. Quantiles are used for this to yield four grouping values: *low, medium low, medium high* and *high crime* rates and thus four groups with approximatey equal numbers of observation each.
 
 
 Next, the data set is randomly spit for the analysis to train (80%) and test (20%) sets. Thus, the train set has 404 and the test set 102 variables.
@@ -302,7 +303,7 @@ table(boston_scaled$crim)
 ```
 
 
-To compare the original values by the created groups a summary is created stratified by the different crime rate categories.
+To compare how the original values by the created groups differ between the groups a summary is created stratified by the different crime rate categories. There are many large differences, especially when comparing the high and low crime rate groups.
 ```{r fig.align="center", warning=FALSE,message=FALSE}
 Boston2<-Boston
 Boston2$crime<-boston_scaled$crim
@@ -323,6 +324,7 @@ Linear Discriminant Analysis (LDA) model is carried out to classify the suburbs 
 
 
 ```{r message=FALSE, warning=FALSE}
+set.seed(123)
 # number of rows in the Boston dataset 
 n <- nrow(boston_scaled)
 # choose randomly 80% of the rows
@@ -379,16 +381,16 @@ table(correct = correct_classes, predicted = lda.pred$class) %>% addmargins()
 ```
 
 
-By crosstabulating the correct and predicted classes it can be seen, as expected based on the plots, that most of the ones predicted to have high crime rates indeed do. However, there are more medium low predictions than there should be. However the low areas are not recognized that well, and both the medium low and medium high classes seem to be problematic. Again, by reflecting the results to the graph it can be captured that the separation is clearest with regard to the highest class. 
+By crosstabulating the correct and predicted classes it can be seen that the model's predictions are quite accurate with the high category in the test data. On the contrary, the low areas are not recognized that well, and both the medium low and medium high classes seem to be problematic. By reflecting the results to the graph it can be captured that the separation is clearest with regard to the highest class. Due to that the prediction accuracies are understandable. 
 
 
 ### K-means
 
-In comparison to LDA, K-means is a clustering method that divides observations into clusters. 
+In comparison to LDA, K-means is a clustering method that divides observations into clusters.
 
 #### Euclidean and Manhattan distances
 
-For K means clustering, the Boston dataset is rescaled, so that the distances are comparable. To examine the distance properties of the data and compare methods superficially the Euclidian (geometric) and Manhattan (along the axes) distance summaries are printed. 
+For K means clustering, the Boston dataset is rescaled, so that the distances are comparable. To examine the distance properties of the data and compare methods superficially both the Euclidian (geometric) and Manhattan (along the axes) distance summaries are printed. 
 
 
 
@@ -421,7 +423,7 @@ pairs(boston_scaled, col = km$cluster,lower.panel = NULL)
 ```
 
 
-At the first sight this looks a little like fireworks. Before interpreting the plot in more detail I will estimate the optimal number of clusters using the total within cluster sum of squares (WCSS) with the number of clusters ranging from 1 to 10 and visualize the results.
+At the first sight the plotted reslts look a little like fireworks. Before interpreting the plot in more detail the optimal number of clusters using the total within cluster sum of squares (WCSS) with the number of clusters ranging from 1 to 10 is estimated and the results visualized.
 ```{r message=FALSE, warning=FALSE, fig.width=4,fig.height=4,fig.align="center"}
 k_max <- 10
 twcss <- sapply(1:k_max, function(k){kmeans(dist_eu, k)$tot.withinss})
@@ -431,7 +433,7 @@ plot(1:k_max, twcss, type = 'b')
 
 
 
-The most prominent change happens at 2 refering to choosing 2 as the most appropriate number of clusters. However, also the drop between 2 and 3 could potentially be interpreted as a radical one. Yet, I choose to carry out the k-means clustering again using 2 as the number of clusters.
+The most prominent change in the sum of squares happens at 2. However, there are still drops after two, too, but they only yield small improvements. Yet, I choose to carry out the k-means clustering again using 2 as the number of clusters.
 
 #### K- means using the optimal number of clusters
 
@@ -440,14 +442,10 @@ km <- kmeans(dist_eu, centers = 2)
 pairs(boston_scaled, col = km$cluster, lower.panel = NULL)
 ```
 
-The new pairwise scatter plot with only two clusters looks better than the previous one. However, it is still, to my opinion somewhat poor with regard to clarity or easiness to interpret. All data points are assigned to two different clusters with different colours. The variables for which the colours  seem clearly separated are more relevant for clustering than for those they seem very mixed. It can be seen that some of the variables, but not all, are indeed clearly divided between the clusters.For example points with tax and rad values belong to the red cluster, while points with high values belong to the black cluster.  
-
-For example points with low rad (index of accessibility to radial highways) values in general belong to the red cluster, and points with high rad values belong to the black cluster. 
-
-Thus rad seems useful for clustering purposes. Another relevant variable is e.g. tax (full-value property-tax rate). However, for example the values of the variable chas don't seem to give any indication about which cluster the points belong to, and thus chas is not very relevant for clustering. Thus this visualisation is helpful in showing whether the variables or variable pairs are good indicators about which cluster a specific data point belongs to.
 
 
- Crime rate clearly (with a few exceptions) belongs to one cluster seen in red and proportion of residential owned lots (zn) to other cluster coloured black. To the same cluster with crime rate belong most of the observations from lower status of population (lstat), proportion of blacks (black) and nitrogen oxide concentration (nox). This means that part of town with high crime rate has also most likely lower status population, black people and high amounts of nitrogen oxide in the air. Areas with high amount of residential owned plots are likely to have accessibility to radial highways (rad), high full value tax rate (tax) and more pupils towards one teacher.
+The new pairwise scatter plot with only two clusters looks better than the previous one.  All data points are assigned to two red/black clusters. The clearer separation for the colours the more relevant for clustering the variable. Property tax and access to radial highways seem to discriminate quite well between the two clusters.
+
 
 
 ### Bonus
@@ -463,7 +461,7 @@ km <-kmeans(dist_eu, centers = 4)
 pairs(Boston, col = km$cluster, lower.panel = NULL)
 ```
 
-```{r message=FALSE, warning=FALSE, fig.width=5,fig.height=6, fig.align="center"}
+```{r message=FALSE, warning=FALSE, fig.width=8,fig.height=5, fig.align="center"}
 lda.fit2 <- lda(km$cluster ~., data = Boston)
 lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "red", tex = 0.75, choices = c(1,2)){
   heads <- coef(x)
@@ -471,13 +469,13 @@ lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "red", tex = 0
          x1 = myscale * heads[,choices[1]], 
          y1 = myscale * heads[,choices[2]], col=color, length = arrow_heads)
   text(myscale * heads[,choices], labels = row.names(heads), 
-       cex = tex, col=color, pos=3)
+       cex = 2, col=color, pos=3)
 }
 plot(lda.fit2, dimen = 2, col= classes, pch=classes)
 lda.arrows(lda.fit2, myscale = 2)
 ```
 
-Nitrogen oxides concentration (nox) is by far the longest arrow and it divides the data frames observations into two separate areas. From the other variables it is hard to say properly. Presumably rad stands out, but barely. From the output below the same can be seen.
+Nitrogen oxides concentration (nox) is by far the longest arrow deviding the data frame observations into two separate areas. From the other variables it is hard to say properly. Presumably rad stands out, but barely. From the output below by looking at the different linear discriminants and the proportion of trace the same can be seen.
 
 ```{r message=FALSE, warning=FALSE, fig.width=5,fig.height=6, fig.align="center"}
 print(lda.fit2)
