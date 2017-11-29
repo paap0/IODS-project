@@ -9,8 +9,7 @@ output:
 
 ---
 
-## **4<sup>th</sup> WEEK**: Clustering and classification
-
+## <span style="color:lightgreen">**4<sup>th</sup> WEEK**: Clustering and classification</span>
 
 Cluster analysis is one of the main tasks of exploratory data mining and is thus the topic of this week's exercise. Clustering techniques identify similar groups or clusters among observations so that members within any segment are *more similar* while data across segments are *different*. However, defining what is meant by that requires often a lot of contextual knowledge and creativity.
 
@@ -81,7 +80,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 ```
 
 
-### Introduction
+### <span style="color:lightgreen">Introduction</span>
 
 
 
@@ -127,9 +126,9 @@ data("Boston")
 glimpse(Boston)
 ```
 
-### Summaries and plots
+### <span style="color:lightgreen">Summaries and plots</span>
 
-#### Basic variable characteristics
+#### <span style="color:lightgreen">Basic variable characteristics</span>
 
 The descriptive summary includes values of skewness (a measure of the symmetry in a distribution) and kurtosis (measuring the [*"tail-heaviness"*](https://www.spcforexcel.com/knowledge/basic-statistics/are-skewness-and-kurtosis-useful-statistics) of the distribution) and already shows the separating quantile values for crime to be further used later.
 ```{r message=FALSE, warning=FALSE}
@@ -140,7 +139,7 @@ summary(tab1)
 ```
 
 
-#### Distribution plots
+#### <span style="color:lightgreen">Distribution plots</span>
 
 To get a better idea of the variables and their distributions some plots are generated.
 
@@ -177,7 +176,8 @@ Due to variable characteristics (percents, proportions or function based values)
 On the contrary, dwelling size referring to the number of rooms (rm) is normally distributed and median value of owner-occupied homes (medv) can also be judged to be.
 Charles River dummy variable (chas) is binary (1/0) referring to the river crossing the area and the radial highways accessibility (rad) is an interval scaled index.
 
-#### Crime rate per capita
+#### <span style="color:lightgreen">Crime rate per capita</span>
+
 ```{r message=FALSE, warning=FALSE, fig.width=6,fig.height=5, fig.align="center"}
 #to get a better idea about variable crim it is plotted separately
 plot(Boston$crim, col="red",pch=8, main="Crime rate per capita")
@@ -192,7 +192,8 @@ ggplot(Boston, aes(x = crim)) +
 ```
 We are especially interested in the variable *crim*. Thus, it is visualized separately. Crime rate varies a lot between areas ranging from min=0.01 to max=88.98. Quite a few high outlier values among the 506 observations as can be seen in the plot contribute to the low  average value of 3.61 and median value of 0.26. The distribution is strongly skewed to the left.
 
-#### Variable correlations
+#### <span style="color:lightgreen">Variable correlations</span>
+
 
 
 To explore the relations between the variables of the data set pairwise scatter plots and a correlation plots are printed.
@@ -268,11 +269,11 @@ Strong positive correlations especially between index of accessibility to radial
 Furthermore, one of our main interests, the crime rate is correlated with many of the variables: e.g. negatively with e.g. distance to employment centers (dis) and median home value (medv), positively with e.g. full-value property tax-rate (tax) and access to radial highways (rad). Thus, an increase in crime rate seems to be associated with an increasing highway accessibility index and property tax.
 
 
-### Scaling the dataset and categorising crime rate
+### <span style="color:lightgreen">Scaling the dataset and categorising crime rate</span>
 
 Linear discriminant analysis is a method generating linear combinations to charachterize variable classes. To enable the method the data set needs to be standardized, i.e. all variables fit to normal distribution so that the mean of every variable is zero by ubtracting the column means from the corresponding columns and dividing the difference with standard deviation:
 
-$$ scaled(x) = \frac{x-means(x)}{sd(x)} $$
+<span style="color:lightgreen">$$ scaled(x) = \frac{x-means(x)}{sd(x)} $$</span>
 
 
 ```{r message=FALSE, warning=FALSE}
@@ -322,10 +323,11 @@ CreateTableOne(vars=c("zn", "indus","chas","nox" ,"rm"
 
 
 
-### Fitting the Model
+### <span style="color:lightgreen">Fitting the model</span>
 
 
-#### LDA analysis on the train set
+
+#### <span style="color:lightgreen">LDA analysis on the train set</span>
 
 
 Linear Discriminant Analysis (LDA) model is carried out to classify the suburbs using the categorized crime rate as the target variable. Firstly, classification is performed on the training dataset, and thereafter the classes are predicted on the test data. 
@@ -351,7 +353,8 @@ lda.fit <- lda(crime ~ ., data = train)
 ```
 
 
-#### LDA (bi)plots
+#### <span style="color:lightgreen">LDA (bi)plots</span>
+
 
 Based on the analysis results are plotted firstly plain, and thereafter as a LDA (bi)plot with the help of a specificifally generated "arrow"-function to add arrows. It has to be kept in mind that for plotting the classes have to tranformed from categorical to numeric.
 
@@ -382,7 +385,8 @@ lda.arrows(lda.fit)
 print(lda.fit) 
 ```
 
-#### Prediction
+#### <span style="color:lightgreen">Prediction</span>
+
 ```{r message=FALSE, warning=FALSE}
 lda.pred <- predict(lda.fit, newdata = test)
 table(correct = correct_classes, predicted = lda.pred$class) %>% addmargins()
@@ -392,11 +396,13 @@ table(correct = correct_classes, predicted = lda.pred$class) %>% addmargins()
 By crosstabulating the correct and predicted classes it can be seen that the model's predictions are quite accurate with the high category in the test data. On the contrary, the low areas are not recognized that well, and both the medium low and medium high classes seem to be problematic. By reflecting the results to the graph it can be captured that the separation is clearest with regard to the highest class. Due to that the prediction accuracies are understandable. 
 
 
-### K-means
+### <span style="color:lightgreen">K-means</span>
+
 
 In comparison to LDA, K-means is a clustering method that divides observations into clusters.
 
-#### Euclidean and Manhattan distances
+#### <span style="color:lightgreen">Eclidean and Manhattan distances</span>
+
 
 For K means clustering, the Boston dataset is rescaled, so that the distances are comparable. To examine the distance properties of the data and compare methods superficially both the Euclidian (geometric) and Manhattan (along the axes) distance summaries are printed. 
 
@@ -418,7 +424,8 @@ summary(dist_man)#Manhattan
 
 
 
-#### Preliminary K-means and determination of the optimal number of clusters
+#### <span style="color:lightgreen">Preliminary K-means and determination of the optimal number of clusters</span>
+
 
 
 K-means algorith is exploratorily ran on the dataset using 5 clusters.
@@ -443,7 +450,8 @@ plot(1:k_max, twcss, type = 'b')
 
 The most prominent change in the sum of squares happens at 2. However, there are still drops after two, too, but they only yield small improvements. Yet, I choose to carry out the k-means clustering again using 2 as the number of clusters.
 
-#### K- means using the optimal number of clusters
+#### <span style="color:lightgreen">K- means using the optimal number of clusters</span>
+
 
 ```{r message=FALSE, warning=FALSE, fig.width=8,fig.height=7, fig.align="center"}
 km <- kmeans(dist_eu, centers = 2)
@@ -456,7 +464,7 @@ The new pairwise scatter plot with only two clusters looks better than the previ
 
 
 
-### Bonus
+### <span style="color:lightgreen">Bonus</span>
 
 
 
