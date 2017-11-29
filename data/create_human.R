@@ -39,7 +39,7 @@ summary(gii)
 #3.New variable names created
 
 names(hd) <- c("HDI.rank","country","HDI","life.exp","edu.exp","edu.mean","GNI","GNI_HDIrank")
-names(gii) <- c("GII.rank", "country", "GII","mat.mort","birth.rate","parl.prop","edu2.f","edu2.m","lab.f","lab.m")
+names(gii) <- c("GII.rank", "country", "GII","mat.mort","ad.birth.rate","parl.prop","edu2.f","edu2.m","lab.f","lab.m")
 
 #4. Gender inequality data edited to yield sec.edu female/male-ratio
 #and labour participation female/male 
@@ -59,6 +59,6 @@ write.csv(human, file = "human.csv", row.names = FALSE)
 #4.Checking that it indeed is saved and the structure is as it should
 
 humantest<-read.csv(file="human.csv", header=TRUE)
-dim(humantest)#should be 195 obs and 9 variables correct!
+dim(humantest)#should be 195 obs and 19 variables correct!
 head(humantest)
 
