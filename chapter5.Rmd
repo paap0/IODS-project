@@ -18,7 +18,7 @@ In addition, rows with missing values are removed and only countries are include
 Variable labels and their explanations are described below:
 
 
-```{r include=FALSE, cache=FALSE, message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE, cache=FALSE, include=FALSE}
 rm(list = ls())
 # Define packages required by this script.
 library(dplyr)
@@ -39,7 +39,7 @@ library(xtable)
 library(factoextra)
 ```
 Data are loaded and glimpsed.
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 # load data
 human<-read.csv(file="human5.csv", row.names=1,header=TRUE)
 glimpse(human)
@@ -47,7 +47,7 @@ glimpse(human)
 
 ### <span style="color:purple">Summary and graphical overview</span>
 
-```{r echo=FALSE, fig.height=7, fig.width=7, message=FALSE, warning=FALSE,fig.align="center"}
+```{r echo=TRUE, fig.align="center", fig.height=7, fig.width=7, message=FALSE, warning=FALSE}
 Label<-c("edu2.f_m" ,     "lab.f_m",       "edu.exp"    ,   "life.exp",
  "GNI"     ,      "mat.mort"  ,    "ad.birth.rate", "parl.prop"  )
 
@@ -68,7 +68,7 @@ kable(om, "html") %>%
 
 Next, detailed summary statistics and box plots are printed.
 
-```{r echo=FALSE, fig.width=10, message=FALSE, warning=FALSE,fig.align="center"}
+```{r echo=TRUE, fig.align="center", fig.width=10, message=FALSE, warning=FALSE}
 library(settings)
 reset(options)
 options("scipen"=10, "digits"=2)
@@ -80,7 +80,7 @@ reset(options)
 ```
 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE,fig.width=10,fig.align="center"}
+```{r echo=TRUE, fig.align="center", fig.width=10, message=FALSE, warning=FALSE}
 par(mfrow=c(2,4))
 p1<-boxplot(human$edu2.f_m,col="lightblue",main="F/M educational ratio")
 #print("Max and min value countries for educational levelF/M ratio")
@@ -126,7 +126,7 @@ p8<-boxplot(human$ad.birth.rate,col="pink",main="Share of female seats in parlia
 
 
 Many of the variables have quite a few outliers meaning that the countries differ tremendeously with each other - as expected. For my own interest, and overall comparison of the countries with extreme values (max and min value countries of each variable according to the order of them) an additional table with an additional row with our own national values is printed.
-```{r echo=FALSE, fig.width=10, message=FALSE, warning=FALSE,fig.align="center"}
+```{r echo=TRUE, fig.align="center", fig.width=10, message=FALSE, warning=FALSE}
 
 #print("Max and min value countries for educational levelF/M ratio")
 a<-rbind(human[which(human$edu2.f_m==max(human$edu2.f_m)),],
@@ -174,7 +174,7 @@ and a huge difference exists to the poorest country, Central African Republic re
 
 ### <span style="color:purple">Variable correlations</span>
 
-```{r echo=FALSE, fig.height=10, fig.width=10, message=FALSE, warning=FALSE, paged.print=FALSE,fig.align="center"}
+```{r echo=TRUE, fig.align="center", fig.height=10, fig.width=10, message=FALSE, warning=FALSE, paged.print=FALSE}
 cor_fun <- function(data, mapping, method="pearson", ndp=2, sz=5, stars=TRUE, ...){
 
     data <- na.omit(data[,c(as.character(mapping$x), as.character(mapping$y))])
@@ -223,7 +223,7 @@ To begin with, it has to clarified, that PCA is an unsupervised approach. This m
 According to the instructions, PCA will be run twice (with unscaled and scaled predictors). Firstly, the former analysis is carried out, and a biplot is created.
 Biplots are basically scatter plots using observations as x and 2 principal components as y coordinates. Labeled arrows connect original variables to the principal components and their length are proportional to the standard deviations. Small angle between a variable and a PC axis reffers to high positive correlation.
 
-```{r echo=FALSE, fig.height=8, fig.width=8, message=FALSE, warning=FALSE,fig.align="center"}
+```{r echo=TRUE, fig.align="center", fig.height=8, fig.width=8, message=FALSE, warning=FALSE}
 pca_human <- prcomp(human)
 summary(pca_human)
 biplot(pca_human, choices = 1:2, cex=c(0.9, 1), col = c("lightgray", "purple"))
@@ -240,7 +240,7 @@ Next, the data are scaled and PCA is ran again.
 
 
 
-```{r echo=FALSE, fig.align="center", fig.height=8, fig.width=8, message=FALSE, warning=FALSE, fi.width=8,fig.align="center"}
+```{r echo=TRUE, fig.align="center", fig.height=8, fig.width=8, message=FALSE, warning=FALSE, fi.width=8}
 human_std <- scale(human)
 pca_human_std <- prcomp(human_std)
 biplot(pca_human_std, choices = 1:2, cex=c(0.6, 1), col = c("lightgrey", "purple"))
@@ -262,7 +262,7 @@ Corresponcence or multiple correspondence analysis can be used in dimensionality
 
 We practice multiple corresponce analysis using the tea dataset and MCA() function that come in the package "FactoMineR" by Francois Husson, Julie Josse, Sebastien Le, and Jeremy Mazet. Additionally, I use "factoextra".
 
-```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align="center"}
+```{r echo=TRUE, fig.align="center", message=FALSE, warning=FALSE}
 library(FactoMineR)
 data(tea)
 str(tea)
@@ -272,14 +272,14 @@ FactoMineR package is required with its tea dataset reporting a questionnare on 
 
 #### <span style="color:purple">My tea data summary and graphical overview</span>
 
-```{r echo=FALSE, fig.width=10, message=FALSE, warning=FALSE, warnings=FALSE,fig.align="center"}
+```{r echo=TRUE, fig.align="center", fig.width=10, message=FALSE, warning=FALSE, warnings=FALSE}
 keep <- c("where", "work","How", "how","age_Q", "sex")
 dftea<- dplyr::select(tea, one_of(keep))
 CreateTableOne(vars=keep,strata=c("sex"),factorVars=keep,data=dftea )
 ```
 
 Graphical overview: 
-```{r echo=FALSE, fig.width=10, message=FALSE, warning=FALSE, warnings=FALSE,fig.align="center"}
+```{r echo=TRUE, fig.align="center", fig.width=10, message=FALSE, warning=FALSE, warnings=FALSE}
 
 gather(dftea) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar(fill="purple") + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))+   scale_fill_manual("key")
 ```
@@ -293,26 +293,26 @@ Next MCA analysis on the chosen tea data is carried out. To do that, firstly, a 
 
 The output of the MCA() function is a list including :
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, warnings=FALSE,fig.align="center"}
+```{r echo=TRUE, fig.align="center", message=FALSE, warning=FALSE, warnings=FALSE}
 tea_mca <- MCA(dftea, graph = FALSE)
 print(tea_mca)
 ```
 
 and looks like this for the chosen tea-dataset:
-```{r echo=FALSE, message=FALSE, warning=FALSE, warnings=FALSE,fig.align="center"}
+```{r echo=TRUE, fig.align="center", message=FALSE, warning=FALSE, warnings=FALSE}
 summary(tea_mca)
 ```
 
 The dimdesc function might help to interpret the dimensions. It allows to see which variables the axes are the most linked to, i.e. which categories describe the best each axis.  
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, warnings=FALSE,fig.align="center"}
+```{r echo=TRUE, fig.align="center", message=FALSE, warning=FALSE, warnings=FALSE}
 dimdesc(tea_mca,axes=1:2,proba=0.05)
 ```
 
 ##### <span style="color:purple">Scree plot</span>
 
 To visualize the percentage of inertia explained by each MCA dimensions:
-```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align="center"}
+```{r echo=TRUE, fig.align="center", message=FALSE, warning=FALSE}
 fviz_screeplot(tea_mca, addlabels = TRUE, ylim = c(0, 22))
 ```
 
@@ -322,7 +322,7 @@ The first two dimensions of MCA explain *only* about 26% of variance. Thus, alre
 
 To further clarify the MCA results graphical representation is used. Firstly, there is biplot showing the global pattern within the data. Observations are represented by blue points and variables by red triangles and labels. The distance between any observation points or variable points gives a measure of their similarity (or dissimilarity). Similar types of individuals are close on the map, as well as similar kinds of variables.
 
-```{r echo=FALSE, fig.height=8, fig.width=8, message=FALSE, warning=FALSE,fig.align="center"}
+```{r echo=TRUE, fig.align="center", fig.height=8, fig.width=8, message=FALSE, warning=FALSE}
 fviz_mca_biplot(tea_mca, 
                repel = TRUE, # Avoid text overlapping (slow if many point)
                ggtheme = theme_minimal())
@@ -331,7 +331,7 @@ fviz_mca_biplot(tea_mca,
 Next, a plot is created to visualize the correlation between variables and MCA principal dimensions:
 
 
-```{r echo=FALSE, fig.height=6, fig.width=6, message=FALSE, warning=FALSE, fig.align="center"}
+```{r echo=TRUE, fig.align="center", fig.height=6, fig.width=6, message=FALSE, warning=FALSE}
 fviz_mca_var(tea_mca, choice = "mca.cor", 
             repel = TRUE, # Avoid text overlapping (slow)
             ggtheme = theme_minimal())
@@ -342,12 +342,12 @@ The plot should help to identify variables that are the most correlated with eac
 
 And finally, as is described in the exercise instructions: "The typical graphs show the original classes of the discrete variables on the same "map", making it possible to reveal connections (correspondences) between different things that would be quite impossible to see from the corresponding cross tables (too many numbers!)."
 
-```{r echo=FALSE, fig.height=6, fig.width=6, message=FALSE, warning=FALSE, fig.align="center"}
+```{r echo=TRUE, fig.align="center", fig.height=6, fig.width=6, message=FALSE, warning=FALSE}
 plot(tea_mca, invisible=c("ind"), habillage = "quali")
 ```
 Or by using [this nice approach](http://www.gastonsanchez.com/visually-enforced/how-to/2012/10/13/MCA-in-R/) to display both the observations and the categories. Moreover, since some individuals will be overlapped, we can add some density curves with geom_density2d() to see those zones that are highly concentrated:
 
-```{r echo=FALSE, fig.height=8, fig.width=8, message=FALSE, warning=FALSE, fig.align="center"}
+```{r echo=TRUE, fig.align="center", fig.height=8, fig.width=8, message=FALSE, warning=FALSE}
  # MCA plot of observations and categories
 cats = apply(dftea, 2, function(x) nlevels(as.factor(x)))
 
