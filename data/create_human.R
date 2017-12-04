@@ -62,3 +62,59 @@ humantest<-read.csv(file="human.csv", header=TRUE)
 dim(humantest)#should be 195 obs and 19 variables correct!
 head(humantest)
 
+
+#Paula paap0 Bergman Nov 2017 Week 5
+#Exercise 5 Data wrangling 
+#Source data: United Nations Human Development Report 2015:
+#Human Development Index (HDI; http://hdr.undp.org/en/composite/HDI)
+#and Gender Inequality Index (GII; http://hdr.undp.org/en/composite/GII)
+
+#Require libraries and load the partly already wrangled data and check again, that it is ok
+library(stringr)
+library(dplyr)
+human<-read.csv(file="human.csv", header=TRUE)
+str(human)
+dim(human)#OK!
+
+#1.Mutate the data transforming GNI to numeric by extracting commas
+human<-mutate (human, GNI=str_replace(human$GNI, pattern=",", replace ="") %>% as.numeric())
+summary(human$GNI)
+str(human)
+
+#2.Exclude unneeded variables as adviced
+
+keeps <- c( "country", "edu2.f_m", "lab.f_m", "edu.exp"  ,  "life.exp" ,  "GNI"  ,"mat.mort" , "ad.birth.rate", 
+             "parl.prop" )
+human <- dplyr::select(human, one_of(keeps))
+str(human)
+#looks good
+
+#3. Exclude cases with missing values
+comp <- complete.cases(human)
+human <- filter(human, comp == TRUE)
+str(human) #OK 162*9
+
+#4. Remove the observations which relate to regions instead of countries
+human$country
+
+#Observations from 156-> seem to be regions
+
+human <- human[1:155, ]
+str(human) #now just 155 observations and 9 variables
+
+#5. Extract (and drop) the country column and make the cells rownames
+rownames(human) <- human$country
+rownames(human) 
+human<-human[,-1]
+str(human) # 155 obs and 8 variables okay!
+
+#Save with rownames included
+write.csv(human, file = "human.csv", row.names = TRUE)
+
+#Checking how I managed:
+humantest<-read.csv(file="human.csv", header=TRUE, row.names = 1)
+str(humantest)
+head(rownames(humantest))# 155 observations, 8 variables, and countries as rownames. OKAY!"
+
+
+
